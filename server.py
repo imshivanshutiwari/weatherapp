@@ -15,6 +15,10 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
+        # Prevent browser caching of UI logos & styles so updates show immediately
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
         super().end_headers()
 
     def do_OPTIONS(self):
@@ -41,7 +45,7 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
             with urllib.request.urlopen(req, timeout=10) as resp:
                 self.send_response(resp.status)
                 for header, val in resp.getheaders():
-                    if header.lower() not in ['access-control-allow-origin', 'content-length', 'transfer-encoding', 'connection']:
+                    if header.lower() not in ['access-control-allow-origin', 'content-length', 'transfer-encoding', 'connection', 'cache-control']:
                         self.send_header(header, val)
                 data = resp.read()
                 self.send_header('Content-Length', str(len(data)))
