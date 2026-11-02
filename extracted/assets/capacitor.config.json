@@ -1,6 +1,6 @@
 {
-	"appId": "com.shiva.aerocast",
-	"appName": "AeroCast",
+	"appId": "in.bmk.weather",
+	"appName": "भारतीय मारुत केन्द्र",
 	"webDir": "www",
 	"plugins": {
 		"SystemBars": {

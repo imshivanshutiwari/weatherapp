@@ -1,69 +1,50 @@
-# AeroCast 🌪️
+# भारतीय मारुत केन्द्र 🇮🇳🌪️
+### Bhartiya Marut Kendra (BMK) - Global Meteorological & Atmospheric System
 
-**AeroCast** is a high-performance, real-time meteorological visualization platform and weather forecast application. It delivers interactive animated wind streamlines, multi-model weather projections, and high-resolution doppler radar & satellite layers.
-
----
-
-## 🌟 Key Features
-
-* **Real-time WebGL Wind Particle Simulation:** Renders live global atmospheric airflow and vector dynamics at 60 FPS using hardware-accelerated shaders.
-* **10-Day Extended Forecast:** Complete multi-day meteorological forecasts with 1-hour temporal resolution.
-* **Multi-Model Support:** Seamlessly inspect forecasts from ECMWF, GFS, ICON, and METEOBLUE models.
-* **Doppler Radar & Satellite Imagery:** Interactive precipitation radar and infrared satellite cloud layers with full zoom capability.
-* **Comprehensive Overlays:** Wind gusts, temperature, atmospheric pressure, wave swells, and Air Quality Index (AQI).
-* **Cross-Platform Architecture:** Built on modern Web standards (HTML5/CSS3/ES Modules) and packaged for mobile devices with Capacitor.
+**भारतीय मारुत केन्द्र** एक आधुनिक एवं उच्च-प्रदर्शन वायुमंडलीय सिमुलेशन एवं मौसम पूर्वानुमान प्लेटफॉर्म है। यह रियल-टाइम वेब-जीएल (WebGL) पार्टिकल सिमुलेशन के साथ वैश्विक पवनों का प्रवाह, बहु-मॉडल मौसम अनुमान, एवं उच्च-रिज़ॉल्यूशन डॉप्लर रडार प्रस्तुत करता है।
 
 ---
 
-## 🏗️ Project Architecture
+## 🌟 मुख्य विशेषताएं (Key Features)
+
+* **वास्तविक समय वायु सिमुलेशन:** 60 FPS पर हार्डवेयर-त्वरित (GPU Shader) वायु प्रवाह एवं पवन सदिशों का सजीव प्रदर्शन।
+* **10-दिवसीय विस्तृत पूर्वानुमान:** 1-घंटे के सटीक अंतराल पर पूर्ण मौसमी डेटा।
+* **बहु-मॉडल एकीकरण (Multi-Model):** ECMWF, GFS, ICON, एवं METEOBLUE मौसम मॉडलों का सीधा विश्लेषण।
+* **डॉप्लर रडार एवं उपग्रह चित्र:** वर्षा रडार एवं इन्फ्रारेड बादलों की लाइव हाई-रिज़ॉल्यूशन ट्रैकिंग।
+* **समग्र मौसमी परतें:** वायु गुणवत्ता सूचकांक (AQI), तापमान, वायुमंडलीय दबाव, एवं आंधी-तूफान के अलर्ट।
+
+---
+
+## 🏗️ परियोजना संरचना (Architecture)
 
 ```
-AeroCast/
-├── server.py               # Lightweight CORS proxy server for weather layers
+भारतीय मारुत केन्द्र/
+├── server.py               # रिवर्स प्रॉक्सी एवं CORS सर्वर
 ├── extracted/
 │   ├── assets/
-│   │   ├── capacitor.config.json   # Mobile build configuration (com.shiva.aerocast)
-│   │   └── public/                 # Web application & map interface
-│   │       ├── index.html          # Application entrypoint
-│   │       ├── img/                # Custom brand logos, icons, and textures
-│   │       └── v/                  # WebGL shaders, Leaflet-GL engine, and plugins
+│   │   ├── capacitor.config.json   # मोबाइल ऍप कॉन्फ़िगरेशन (in.bmk.weather)
+│   │   └── public/                 # वेब इंटरफेस एवं मानचित्र
+│   │       ├── index.html          # मुख्य पोर्टल
+│   │       ├── img/                # भारतीय मारुत केन्द्र लोगो एवं प्रतीक चिन्ह
+│   │       └── v/                  # WebGL शेडर्स एवं मैप इंजन
 └── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 स्थानीय स्तर पर चलाएं (Quickstart)
 
-### Prerequisites
-* Python 3.8+ (for running the local server)
-* Modern web browser (Chrome, Edge, Firefox, or Safari) with WebGL support
-
-### Running Locally
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/imshivanshutiwari/weatherapp.git
-   cd weatherapp
-   ```
-
-2. **Start the local server:**
-   ```bash
-   python server.py
-   ```
-
-3. **Open in your browser:**
-   Navigate to [http://localhost:8080](http://localhost:8080).
-
----
-
-## 📱 Mobile Build (Android)
-The project is configured for Capacitor Android deployment:
 ```bash
-npx cap sync android
-npx cap open android
+# रिपोजिटरी क्लोन करें
+git clone https://github.com/imshivanshutiwari/weatherapp.git
+cd weatherapp
+
+# सर्वर प्रारंभ करें
+python server.py
 ```
+ब्राउज़र में खोलें: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 📄 License
-This project is for educational and research purposes.
+## 📄 अनुज्ञापत्र (License)
+शैक्षणिक एवं शोध उद्देश्यों के लिए समर्पित।
