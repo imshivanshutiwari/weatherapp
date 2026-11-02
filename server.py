@@ -15,7 +15,6 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', '*')
-        # Prevent browser caching of UI logos & styles so updates show immediately
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         self.send_header('Pragma', 'no-cache')
         self.send_header('Expires', '0')
@@ -26,12 +25,21 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        # Proxy external Windy services locally to eliminate browser CORS errors
-        if self.path.startswith('/services/') or self.path.startswith('/metadata/'):
-            remote_url = f"https://node.windy.com{self.path}"
+        # Full proxy mapping for all 65+ weather maps & layers
+        if self.path.startswith('/rdr/'):
+            remote_url = f"https://rdr.windy.com{self.path[4:]}"
+            self._proxy(remote_url)
+        elif self.path.startswith('/sat/'):
+            remote_url = f"https://sat.windy.com{self.path[4:]}"
+            self._proxy(remote_url)
+        elif self.path.startswith('/ims/'):
+            remote_url = f"https://ims.windy.com{self.path[4:]}"
             self._proxy(remote_url)
         elif self.path.startswith('/tiles/'):
             remote_url = f"https://tiles.windy.com{self.path}"
+            self._proxy(remote_url)
+        elif self.path.startswith('/services/') or self.path.startswith('/metadata/') or self.path.startswith('/maptile/') or self.path.startswith('/tc/'):
+            remote_url = f"https://node.windy.com{self.path}"
             self._proxy(remote_url)
         else:
             super().do_GET()
@@ -42,7 +50,7 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': '*/*'
             })
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            with urllib.request.urlopen(req, timeout=12) as resp:
                 self.send_response(resp.status)
                 for header, val in resp.getheaders():
                     if header.lower() not in ['access-control-allow-origin', 'content-length', 'transfer-encoding', 'connection', 'cache-control']:
@@ -63,5 +71,5 @@ class WeatherAppHandler(http.server.SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), WeatherAppHandler) as httpd:
-        print(f"Weather app CORS-enabled server running at http://localhost:{PORT}")
+        print(f"Bhartiya Marut Kendra proxy running at http://localhost:{PORT}")
         httpd.serve_forever()
