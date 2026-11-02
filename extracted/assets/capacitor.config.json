@@ -1,6 +1,6 @@
 {
-	"appId": "com.windyty.android",
-	"appName": "Windy",
+	"appId": "com.shiva.aerocast",
+	"appName": "AeroCast",
 	"webDir": "www",
 	"plugins": {
 		"SystemBars": {
