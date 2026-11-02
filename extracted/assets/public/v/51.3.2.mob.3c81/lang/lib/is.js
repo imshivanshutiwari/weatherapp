@@ -1,0 +1,1 @@
+export default{CLOSE:"loka",DOWNLOAD_APP:"Eða sæktu opinbera snjallforritið:",DO_YOU_LIKE_THIS_MAP:"Líkar þér þetta kort?",GO_TO_THE_ORIGINAL_WEBSITE:"Farðu á upprunalegu vefsíðuna:"};

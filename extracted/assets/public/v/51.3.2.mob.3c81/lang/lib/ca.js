@@ -1,0 +1,1 @@
+export default{CLOSE:"tanca",DOWNLOAD_APP:"O descarrega l'aplicació oficial per a mòbils:",DO_YOU_LIKE_THIS_MAP:"T'agrada aquest mapa?",GO_TO_THE_ORIGINAL_WEBSITE:"Ves al lloc web original:"};

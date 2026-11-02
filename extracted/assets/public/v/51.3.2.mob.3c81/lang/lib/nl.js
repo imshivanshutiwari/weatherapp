@@ -1,0 +1,1 @@
+export default{CLOSE:"afsluiten",DOWNLOAD_APP:"Of download de officiële mobile app:",DO_YOU_LIKE_THIS_MAP:"Bent u tevreden over deze kaart?",GO_TO_THE_ORIGINAL_WEBSITE:"Ga naar de originele website:"};

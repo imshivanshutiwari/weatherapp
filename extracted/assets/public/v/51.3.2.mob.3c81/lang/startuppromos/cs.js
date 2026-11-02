@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"Tato verze aplikace Windy.com je <b>zastaralá</b> a brzy přestane fungovat. Prosím, <b>aktualizujte svou aplikaci Windy.com</b> na nejnovější verzi."};

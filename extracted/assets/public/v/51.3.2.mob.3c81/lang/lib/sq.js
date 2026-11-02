@@ -1,0 +1,1 @@
+export default{CLOSE:"mbyll",DOWNLOAD_APP:"Ose shkarkoni aplikacionin zyrtar:",DO_YOU_LIKE_THIS_MAP:"A e pëlqeni këtë hartë?",GO_TO_THE_ORIGINAL_WEBSITE:"Shkoni te faqja origjinale e internetit:"};

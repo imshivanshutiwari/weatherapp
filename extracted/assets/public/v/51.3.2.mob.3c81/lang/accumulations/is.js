@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} dagar",ACC_DURATION:"Tímalengd uppsöfnunar:",ACC_HOURS:"{{num}} klukkustundir"};

@@ -1,0 +1,1 @@
+export default{CLOSE:"uždaryti",DOWNLOAD_APP:"Arba atsisiųskite oficialią mobiliąją programėlę:",DO_YOU_LIKE_THIS_MAP:"Ar jums patinka šis žemėlapis?",GO_TO_THE_ORIGINAL_WEBSITE:"Eikite į pradinę svetainę:"};

@@ -1,0 +1,1 @@
+const e=(e,t)=>{let n=Math.PI/180,r=e.lat*n,i=t.lat*n,a=Math.sin((t.lat-e.lat)*n/2),o=Math.sin((t.lon-e.lon)*n/2),s=Math.min(1,Math.max(0,a*a+Math.cos(r)*Math.cos(i)*o*o));return 6371e3*(2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s)))};export{e as t};

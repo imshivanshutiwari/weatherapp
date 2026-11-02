@@ -1,0 +1,1 @@
+export default{CLOSE:"tutup",DOWNLOAD_APP:"atau download aplikasi resmi:",DO_YOU_LIKE_THIS_MAP:"Apakah anda menyukai peta tersebut?",GO_TO_THE_ORIGINAL_WEBSITE:"Pergi ke halaman website:"};

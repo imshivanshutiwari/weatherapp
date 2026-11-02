@@ -1,0 +1,1 @@
+export default{CLOSE:"غلق",DOWNLOAD_APP:"أو نزل تطبيق الجوال الرسمى:",DO_YOU_LIKE_THIS_MAP:"هل تعجبك هذه الخريطة؟",GO_TO_THE_ORIGINAL_WEBSITE:"اذهب إلى الموقع الأصلى:"};

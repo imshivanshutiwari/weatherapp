@@ -1,0 +1,1 @@
+export default{CLOSE:"затваряне",DOWNLOAD_APP:"Или изтеглете официалното мобилно приложение:",DO_YOU_LIKE_THIS_MAP:"Харесвате ли тази карта?",GO_TO_THE_ORIGINAL_WEBSITE:"Посетете първоначалния уебсайт:"};

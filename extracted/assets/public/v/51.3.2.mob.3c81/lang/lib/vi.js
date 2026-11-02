@@ -1,0 +1,1 @@
+export default{CLOSE:"đóng",DOWNLOAD_APP:"Hoặc tải xuống ứng dụng di động chính thức:",DO_YOU_LIKE_THIS_MAP:"Bạn có thích bản đồ này không?",GO_TO_THE_ORIGINAL_WEBSITE:"Đi đến trang web gốc:"};

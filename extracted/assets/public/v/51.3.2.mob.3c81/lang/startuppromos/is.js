@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"Þessi útgáfa af Windy.com forritinu er <b>úrelt</b> og mun hætta að virka fljótlega. Vinsamlega <b>uppfærðu Windy.com forritið þitt</b> í nýjustu útgáfu."};

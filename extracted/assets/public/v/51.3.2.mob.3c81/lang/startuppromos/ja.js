@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"このバージョンのWindy.comアプリは<b>古く</b>まもなく動作しなくなります。 <b>Windy.comアプリをアップデート</b>して最新版にしてください。"};

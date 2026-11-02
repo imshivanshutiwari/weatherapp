@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} 天",ACC_DURATION:"累積時間：",ACC_HOURS:"{{num}} 小時"};

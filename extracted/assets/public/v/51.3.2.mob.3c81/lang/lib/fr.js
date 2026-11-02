@@ -1,0 +1,1 @@
+export default{CLOSE:"fermer",DOWNLOAD_APP:"Ou téléchargez l'application mobile officielle:",DO_YOU_LIKE_THIS_MAP:"Aimez-vous cette carte?",GO_TO_THE_ORIGINAL_WEBSITE:"Accédez au site web d'origine:"};

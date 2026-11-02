@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} من الأيام",ACC_DURATION:"مدة التراكم:",ACC_HOURS:"{{num}} من الساعات"};

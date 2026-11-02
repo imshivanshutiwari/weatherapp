@@ -1,0 +1,1 @@
+export default{CLOSE:"luk",DOWNLOAD_APP:"Eller download den officielle mobil app:",DO_YOU_LIKE_THIS_MAP:"Kan du lide dette kort?",GO_TO_THE_ORIGINAL_WEBSITE:"Gå til den oprindelige webside:"};

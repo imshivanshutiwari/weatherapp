@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"Ta wersja aplikacji Windy.com jest <b>przestarzała</b> i wkrótce przestanie działać. Prosimy o <b>zaktualizowanie aplikacji Windy.com</b> do najnowszej wersji."};

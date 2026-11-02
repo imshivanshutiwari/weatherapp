@@ -1,0 +1,1 @@
+export default{CLOSE:"닫기",DOWNLOAD_APP:"또는 공식 모바일 앱을 다운로드:",DO_YOU_LIKE_THIS_MAP:"이 지도가 마음에 드시나요?",GO_TO_THE_ORIGINAL_WEBSITE:"원본 사이트로 이동:"};

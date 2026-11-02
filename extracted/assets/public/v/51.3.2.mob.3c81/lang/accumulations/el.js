@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} μέρες",ACC_DURATION:"Διάρκεια της συσσώρευσης:",ACC_HOURS:"{{num}} ώρες"};

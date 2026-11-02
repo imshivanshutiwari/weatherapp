@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} päivää",ACC_DURATION:"Kertymän kesto:",ACC_HOURS:"{{num}} tuntia"};

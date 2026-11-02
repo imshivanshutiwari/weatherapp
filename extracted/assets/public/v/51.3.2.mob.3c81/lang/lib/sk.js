@@ -1,0 +1,1 @@
+export default{CLOSE:"zavrieť",DOWNLOAD_APP:"Alebo si stiahnite oficiálnu mobilnú aplikáciu:",DO_YOU_LIKE_THIS_MAP:"Páči sa vám táto mapa?",GO_TO_THE_ORIGINAL_WEBSITE:"Prejdite na pôvodnú webovú stránku:"};

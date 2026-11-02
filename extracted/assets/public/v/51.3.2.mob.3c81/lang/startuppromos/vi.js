@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"Phiên bản ứng dụng Windy.com này đã <b>lỗi thời</b> và sẽ sớm ngừng hoạt động. Vui lòng <b>cập nhật ứng dụng Windy.com</b> của bạn lên phiên bản mới nhất."};

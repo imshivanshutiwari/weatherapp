@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} nap",ACC_DURATION:"Összegződés időtartama:",ACC_HOURS:"{{num}} óra"};

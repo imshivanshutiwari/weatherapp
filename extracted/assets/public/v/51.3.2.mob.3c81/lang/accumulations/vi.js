@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} ngày ",ACC_DURATION:"Thời lượng tích lũy:",ACC_HOURS:"{{num}} giờ"};

@@ -1,0 +1,1 @@
+export default{CLOSE:"закрийте",DOWNLOAD_APP:"Чи звантажте офіційний мобільний додаток:",DO_YOU_LIKE_THIS_MAP:"Вам подобається ця карта?",GO_TO_THE_ORIGINAL_WEBSITE:"Перейдіть на оригінальний веб-сайт:"};

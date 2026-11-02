@@ -1,0 +1,1 @@
+export default{CLOSE:"סגור",DOWNLOAD_APP:"או הורד את האפליקצייה הרשמית לנייד:",DO_YOU_LIKE_THIS_MAP:"האם אתם אוהבים את המפה הזאת?",GO_TO_THE_ORIGINAL_WEBSITE:"עבור לאתר האינטרנט המקורי:"};

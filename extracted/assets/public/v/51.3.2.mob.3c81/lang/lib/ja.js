@@ -1,0 +1,1 @@
+export default{CLOSE:"閉じる",DOWNLOAD_APP:"または公式携帯アプリをダウンロード",DO_YOU_LIKE_THIS_MAP:"このマップが気に入りましたか？",GO_TO_THE_ORIGINAL_WEBSITE:"提供元のサイトに移動する"};

@@ -1,0 +1,1 @@
+function e(e,t){let n=n=>{e.contains(n.target)||t(n)};return document.addEventListener(`mousedown`,n,!0),document.addEventListener(`touchstart`,n,!0),{destroy(){document.removeEventListener(`mousedown`,n,!0),document.removeEventListener(`touchstart`,n,!0)},update(e){t=e}}}export{e as t};

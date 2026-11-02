@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} zile",ACC_DURATION:"Durata acumulării:",ACC_HOURS:"{{num}} ore"};

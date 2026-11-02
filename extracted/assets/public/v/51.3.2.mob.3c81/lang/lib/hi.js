@@ -1,0 +1,1 @@
+export default{CLOSE:"बंद करें",DOWNLOAD_APP:"या ऑफिशियल मोबाइल ऐप डाउनलोड करें:",DO_YOU_LIKE_THIS_MAP:"आपको यह मैप अच्छा लगा?",GO_TO_THE_ORIGINAL_WEBSITE:"ओरिजनल वेबसाइट पर जाएं:"};

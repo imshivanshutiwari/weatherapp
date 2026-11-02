@@ -1,0 +1,36 @@
+{
+  "appId": "com.windyty.android",
+  "appName": "Windy",
+  "webDir": "www",
+  "bundledWebRuntime": true,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "splashImmersive": false,
+      "androidScaleType": "CENTER_CROP",
+      "splashDeadline": "30.05.2024"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ico64.png"
+    },
+    "GoogleAuth": {
+      "androidClientId": "901162215668-gfufima2iv2k0trvpbuoch4r7k1hn7qj.apps.googleusercontent.com",
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "forceCodeForRefreshToken": true
+    }
+  },
+  "XXserver": {
+    "hostname": "windy.com",
+    "androidScheme": "https"
+  },
+  "XXXXserver": {
+    "COMMENT": "Get you network IP adress from clients './make -t mobile -cbws' and use livereload",
+    "iosScheme": "http",
+    "url": "http://192.168.1.53:8001/",
+    "cleartext": true
+  }
+}

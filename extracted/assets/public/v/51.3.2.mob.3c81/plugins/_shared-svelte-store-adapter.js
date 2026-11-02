@@ -1,0 +1,1 @@
+import{store as e}from"@windyCore";import{G as t}from"./_shared-client.js";const n=e,r=(e,{unbindOnDestroy:r=!0}={})=>{let i=0,a=new Map,o=n.on(e,(e,t)=>{a.forEach(t=>{t(e)})});return r&&t(()=>{n.off(o)}),{subscribe(t){let r=i++;return a.set(r,t),t(n.get(e)),()=>{a.delete(r)}},set(t){n.set(e,t)},get(){return n.get(e)},update(t){return t(n.get(e))}}};export{r as t};

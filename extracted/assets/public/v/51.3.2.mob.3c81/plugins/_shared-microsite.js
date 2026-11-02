@@ -1,0 +1,1 @@
+const e=e=>{let t=`https://webcams-admin.windy.com${e?`/webcams/edit/${e}`:`/webcams/add`}`;window.open(t,`_blank`)};export{e as t};

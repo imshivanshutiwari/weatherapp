@@ -1,0 +1,1 @@
+export default{REPORT_ISSUE_ATTACH:"附上螢幕截圖或影片",REPORT_ISSUE_DESCRIPTION:"描述問題的最佳方法是向我們發送螢幕截圖或影片，以說明問題，並附上對錯誤原因以及如何重現錯誤的簡要描述。",REPORT_ISSUE_FULLSCREEN_PREVIEW:"全螢幕預覽",REPORT_ISSUE_MAX_SIZE:"檔案最大為 20MB",REPORT_ISSUE_PLACEHOLDER:"請描述您遇到的問題……",REPORT_ISSUE_SEND:"向我們發送錯誤報告",REPORT_ISSUE_SEND_NEW:"傳送新的報告",REPORT_ISSUE_SUCCESS:"感謝您的回報！我們會進行檢查。",REPORT_ISSUE_UPLOADING:"上傳檔案："};

@@ -1,0 +1,1 @@
+export default{CLOSE:"மூடு",DOWNLOAD_APP:"அல்லது அதிகாரபூர்வமான செயலியை தரவிரக்கம் செய்யவும்:",DO_YOU_LIKE_THIS_MAP:"உங்களுக்கு இந்த வரை படம் பிடித்து உள்ளதா?",GO_TO_THE_ORIGINAL_WEBSITE:"மூலமான வலைதளம் செல்லுங்கள்:"};

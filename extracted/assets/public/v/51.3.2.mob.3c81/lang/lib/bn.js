@@ -1,0 +1,1 @@
+export default{CLOSE:"->বন্ধ",DOWNLOAD_APP:"অথবা অফিসিয়্যাল মোবাইল অ্যাপ ডাউনলোড করুন:",DO_YOU_LIKE_THIS_MAP:"আপনি কি এই ম্যাপটি পছন্দ করেন?",GO_TO_THE_ORIGINAL_WEBSITE:"মূল ওয়েবসাইটে প্রবেশ করুন:"};

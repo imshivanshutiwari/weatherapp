@@ -1,0 +1,1 @@
+export default{CLOSE:"stäng",DOWNLOAD_APP:"Eller ladda ned den officiella mobilappen:",DO_YOU_LIKE_THIS_MAP:"Gillar du kartan?",GO_TO_THE_ORIGINAL_WEBSITE:"Gå till originalwebbplatsen:"};

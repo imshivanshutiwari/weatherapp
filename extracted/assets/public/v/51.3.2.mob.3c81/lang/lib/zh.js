@@ -1,0 +1,1 @@
+export default{CLOSE:"关闭页面",DOWNLOAD_APP:"或下载官网手机应用",DO_YOU_LIKE_THIS_MAP:"您喜欢此地图吗？",GO_TO_THE_ORIGINAL_WEBSITE:"返回原网页"};

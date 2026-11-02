@@ -1,0 +1,1 @@
+export default{CLOSE:"بستن",DOWNLOAD_APP:"یا برنامه موبایلی رسمی را دانلود کنید:",DO_YOU_LIKE_THIS_MAP:"این نقشه را دوست دارید؟",GO_TO_THE_ORIGINAL_WEBSITE:"به وب‌سایت اصلی برو:"};

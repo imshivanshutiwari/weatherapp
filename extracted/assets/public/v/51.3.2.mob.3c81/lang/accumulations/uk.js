@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} днів",ACC_DURATION:"Тривалість накопичення:",ACC_HOURS:"{{num}} годин"};

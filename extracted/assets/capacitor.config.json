@@ -1,0 +1,23 @@
+{
+	"appId": "com.windyty.android",
+	"appName": "Windy",
+	"webDir": "www",
+	"plugins": {
+		"SystemBars": {
+			"insetsHandling": "disable"
+		},
+		"LocalNotifications": {
+			"smallIcon": "ico64.png"
+		}
+	},
+	"server": {
+		"hostname": "app-webview.windy.com",
+		"androidScheme": "https"
+	},
+	"XXXXserver": {
+		"COMMENT": "Get you network IP adress from clients './make -t mobile -cbws' and use livereload",
+		"iosScheme": "http",
+		"url": "http://192.168.1.53:8001/",
+		"cleartext": true
+	}
+}

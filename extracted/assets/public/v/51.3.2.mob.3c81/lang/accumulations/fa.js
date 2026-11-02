@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} روز",ACC_DURATION:"مدت انباشت:",ACC_HOURS:"{{num}} ساعت"};

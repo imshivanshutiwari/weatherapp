@@ -1,0 +1,1 @@
+export default{CLOSE:"κλείσιμο",DOWNLOAD_APP:"'Η κατεβάστε την επίσημη εφαρμογή κινητού:",DO_YOU_LIKE_THIS_MAP:"Σας αρέσει αυτός ο χάρτης;",GO_TO_THE_ORIGINAL_WEBSITE:"Πηγαίνετε στην αρχική σελίδα:"};

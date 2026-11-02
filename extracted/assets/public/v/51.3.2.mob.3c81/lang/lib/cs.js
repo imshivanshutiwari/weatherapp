@@ -1,0 +1,1 @@
+export default{CLOSE:"zavřít",DOWNLOAD_APP:"Nebo si stáhněte oficiální mobilní aplikaci:",DO_YOU_LIKE_THIS_MAP:"Líbí se vám tato mapa?",GO_TO_THE_ORIGINAL_WEBSITE:"Přejděte na původní web:"};

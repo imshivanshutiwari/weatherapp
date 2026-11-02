@@ -1,0 +1,1 @@
+export default{CLOSE:"sulge",DOWNLOAD_APP:"Või laadi alla ametlik mobiilirakendus:",DO_YOU_LIKE_THIS_MAP:"Kas sulle meeldib see kaart?",GO_TO_THE_ORIGINAL_WEBSITE:"Ava algne veebisait:"};

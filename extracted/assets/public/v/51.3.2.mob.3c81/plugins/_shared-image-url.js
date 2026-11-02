@@ -1,0 +1,1 @@
+import{http as e}from"@windyCore";import{t}from"./_shared-object-spread2.js";const n=e,r=({webcamId:e,size:r,state:i},a={cache:!1})=>n.get(`/webcams/v1.0/webcams/image-url/${e}`,t(t({},a),{},{qs:{size:r,state:i}})),i=(e,t)=>{let r=`/webcams/v1.0/webcams/last-updated-on?webcamIds=${e}`;return n.get(r,t)};export{i as n,r as t};

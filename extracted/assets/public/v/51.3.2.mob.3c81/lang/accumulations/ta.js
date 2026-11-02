@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} நாள்",ACC_DURATION:"சேர்க்கையின் கால அளவு:",ACC_HOURS:"{{num}} மணி நேரம்"};

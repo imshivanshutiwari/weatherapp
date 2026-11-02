@@ -1,0 +1,1 @@
+export default{REPORT_ISSUE_ATTACH:"附加截图或视频",REPORT_ISSUE_DESCRIPTION:"描述问题的最佳方式是向我们发送截图或视频（用于说明问题），并附上简要的问题描述和重现步骤。",REPORT_ISSUE_FULLSCREEN_PREVIEW:"全屏预览",REPORT_ISSUE_MAX_SIZE:"最大文件大小为20MB",REPORT_ISSUE_PLACEHOLDER:"描述您遇到的问题…",REPORT_ISSUE_SEND:"发送错误报告",REPORT_ISSUE_SEND_NEW:"发送新反馈",REPORT_ISSUE_SUCCESS:"感谢您的反馈！我们会进行核查。",REPORT_ISSUE_UPLOADING:"正在上传文件："};

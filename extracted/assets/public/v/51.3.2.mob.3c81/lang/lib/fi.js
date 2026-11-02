@@ -1,0 +1,1 @@
+export default{CLOSE:"sulje",DOWNLOAD_APP:"Tai lataa virallinen mobiiliappi:",DO_YOU_LIKE_THIS_MAP:"Pidätkö tästä kartasta?",GO_TO_THE_ORIGINAL_WEBSITE:"Mene alkuperäiselle websivulle:"};

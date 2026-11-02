@@ -1,0 +1,1 @@
+import{d as e}from"./_shared-client.js";import{t}from"./_shared-object-spread2.js";const n=e=>e!==null,r=e=>{try{return JSON.parse(String(e))}catch(e){return null}},i=(i,a,o=n)=>{let s=`${i}`,c=e(a),l=r(localStorage.getItem(s));return o(l)&&c.set(l),t(t({},c),{},{set:e=>{localStorage.setItem(s,JSON.stringify(e)),c.set(e)}})};export{i as t};

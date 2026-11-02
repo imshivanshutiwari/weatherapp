@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} дни",ACC_DURATION:"Продължителност на натрупването:",ACC_HOURS:"{{num}} часа"};

@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} วัน ",ACC_DURATION:"ระยะเวลาสะสม:",ACC_HOURS:"{{num}} ชั่วโมง"};

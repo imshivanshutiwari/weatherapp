@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} hari",ACC_DURATION:"Durasi akumulasi:",ACC_HOURS:"{{num}} jam"};

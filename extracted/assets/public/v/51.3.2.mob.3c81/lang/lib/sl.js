@@ -1,0 +1,1 @@
+export default{CLOSE:"zapri",DOWNLOAD_APP:"Ali prenesite uradno mobilno aplikacijo:",DO_YOU_LIKE_THIS_MAP:"Vam je všeč ta zemljevid?",GO_TO_THE_ORIGINAL_WEBSITE:"Pojdi na prvotno spletno mesto:"};

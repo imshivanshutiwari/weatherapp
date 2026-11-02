@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} ימים",ACC_DURATION:"משך הצבירה:",ACC_HOURS:"{{num}} שעות"};

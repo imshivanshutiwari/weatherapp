@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} 日",ACC_DURATION:"降水量の取得間隔",ACC_HOURS:"{{num}} 時間"};

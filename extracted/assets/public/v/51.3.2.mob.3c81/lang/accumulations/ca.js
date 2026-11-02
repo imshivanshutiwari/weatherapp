@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} dies",ACC_DURATION:"Duració de l'acumulació:",ACC_HOURS:"{{num}} hores"};

@@ -1,0 +1,1 @@
+export default{CLOSE:"zatvori",DOWNLOAD_APP:"Ili preuzmi službenu mobilnu aplikaciju:",DO_YOU_LIKE_THIS_MAP:"Sviđa li ti se ova karta?",GO_TO_THE_ORIGINAL_WEBSITE:"Idi na izvorno web mjesto:"};

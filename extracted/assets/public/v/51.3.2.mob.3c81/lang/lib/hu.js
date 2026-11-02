@@ -1,0 +1,1 @@
+export default{CLOSE:"bezárás",DOWNLOAD_APP:"Vagy töltse le a hivatalos mobilalkalmazást:",DO_YOU_LIKE_THIS_MAP:"Tetszik Önnek ez a térkép?",GO_TO_THE_ORIGINAL_WEBSITE:"Menjen az eredeti weboldalra:"};

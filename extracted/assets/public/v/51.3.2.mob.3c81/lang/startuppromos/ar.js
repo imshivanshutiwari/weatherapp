@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"هذا الإصدار من تطبيق Windy.com <b>قديم</b> وسيتوقف عن العمل قريبًا. يرجى <b>تحديث تطبيق Windy.com</b> الخاص بك إلى أحدث إصدار."};

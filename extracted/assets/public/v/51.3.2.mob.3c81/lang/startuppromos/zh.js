@@ -1,0 +1,1 @@
+export default{STARTUP_OBSOLETE_APP:"此版本 Windy.com 应用<b>已过时</b>，即将停止工作。请<b>更新您的 Windy.com 应用</b>至最新版本。"};

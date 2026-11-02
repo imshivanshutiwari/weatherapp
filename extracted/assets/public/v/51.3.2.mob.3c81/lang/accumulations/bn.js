@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} দিন",ACC_DURATION:"সংগ্রহের সময়কাল:",ACC_HOURS:"{{num}} ঘন্টা"};

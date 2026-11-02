@@ -1,0 +1,1 @@
+export default{CLOSE:"kapat",DOWNLOAD_APP:"Veya resmi mobil uygulamayı indirin:",DO_YOU_LIKE_THIS_MAP:"Bu haritayı beğendin mi?",GO_TO_THE_ORIGINAL_WEBSITE:"Orijinal web sitesine gidin:"};

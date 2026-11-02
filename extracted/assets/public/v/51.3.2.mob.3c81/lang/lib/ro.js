@@ -1,0 +1,1 @@
+export default{CLOSE:"închide",DOWNLOAD_APP:"Sau descarcă aplicația oficială de mobil:",DO_YOU_LIKE_THIS_MAP:"Îți place harta?",GO_TO_THE_ORIGINAL_WEBSITE:"Schimbă la website-ul original:"};

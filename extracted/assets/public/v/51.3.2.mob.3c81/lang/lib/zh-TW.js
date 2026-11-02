@@ -1,0 +1,1 @@
+export default{CLOSE:"關閉頁面",DOWNLOAD_APP:"或下載官方手機應用程式：",DO_YOU_LIKE_THIS_MAP:"您喜歡此地圖嗎？",GO_TO_THE_ORIGINAL_WEBSITE:"返回原網站"};

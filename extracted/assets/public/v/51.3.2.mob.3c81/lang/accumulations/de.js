@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} Tage",ACC_DURATION:"Dauer der Ansammlung:",ACC_HOURS:"{{num}} Stunden"};

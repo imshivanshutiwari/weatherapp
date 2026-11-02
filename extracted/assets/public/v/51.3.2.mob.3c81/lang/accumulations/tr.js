@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} günler",ACC_DURATION:"Biriktirme süresi:",ACC_HOURS:"{{num}} saat"};

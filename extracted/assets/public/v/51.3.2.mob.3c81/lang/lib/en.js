@@ -1,0 +1,1 @@
+export default{DO_YOU_LIKE_THIS_MAP:"Do you like this map?",GO_TO_THE_ORIGINAL_WEBSITE:"Go to the original website:",DOWNLOAD_APP:"Or download the official mobile app:",CLOSE:"close"};

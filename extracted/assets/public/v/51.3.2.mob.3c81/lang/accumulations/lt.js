@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} dienų",ACC_DURATION:"Akumuliacijos trukmė:",ACC_HOURS:"{{num}} valandų"};

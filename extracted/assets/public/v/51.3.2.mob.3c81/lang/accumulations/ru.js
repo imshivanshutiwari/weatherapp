@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} дн.",ACC_DURATION:"Продолжительность накопления:",ACC_HOURS:"{{num}} ч."};

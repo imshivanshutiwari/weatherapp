@@ -1,0 +1,1 @@
+import{$t as e}from"./_shared-client.js";e();

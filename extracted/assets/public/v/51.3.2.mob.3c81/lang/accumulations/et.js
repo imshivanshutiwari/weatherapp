@@ -1,0 +1,1 @@
+export default{ACC_DAYS:"{{num}} päeva",ACC_DURATION:"Kogumise kestus:",ACC_HOURS:"{{num}} tundi"};
