@@ -19,7 +19,10 @@
 
 ```
 भारतीय मारुत केन्द्र/
-├── server.py               # रिवर्स प्रॉक्सी एवं CORS सर्वर
+├── bin/
+│   └── rust_server.exe     # अल्ट्रा-फास्ट नेटिव रस्ट (Rust) सर्वर
+├── rust_server/            # रस्ट सर्वर सोर्स कोड (Axum + Tokio + Moka)
+├── start_server.bat        # एक-क्लिक सर्वर लॉन्चर
 ├── extracted/
 │   ├── assets/
 │   │   ├── capacitor.config.json   # मोबाइल ऍप कॉन्फ़िगरेशन (in.bmk.weather)
@@ -39,8 +42,11 @@
 git clone https://github.com/imshivanshutiwari/weatherapp.git
 cd weatherapp
 
-# सर्वर प्रारंभ करें
-python server.py
+# रस्ट सर्वर प्रारंभ करें (Windows)
+start_server.bat
+
+# या सीधे चलाएं:
+./bin/rust_server.exe
 ```
 ब्राउज़र में खोलें: [http://localhost:8080](http://localhost:8080)
 
