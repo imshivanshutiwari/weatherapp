@@ -205,3 +205,4 @@ Copy-Item "target\release\rust_server.exe" "..\bin\rust_server.exe" -Force
 - **`a479e32`**: `feat(rust): add persistent 2-tier disk cache, SIMD weather tile unpackers, and native GRIB2 preprocessor CLI`
 - **`11d8ade`**: `feat(wasm): add Marching Squares isobars, zero-copy METAR parser, and Hermite palette spline`
 - **`378c09f`**: `feat(desktop): add native Rust desktop application launcher BhartiyaMarutKendra.exe`
+- **`94a15bb`**: `feat(branding): replace user-visible Windy text with Bhartiya Marut Kendra (भारतीय मारुत केंद्र)`
