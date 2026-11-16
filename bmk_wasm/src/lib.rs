@@ -112,3 +112,107 @@ pub extern "C" fn initial_bearing_deg(lat1: f64, lon1: f64, lat2: f64, lon2: f64
     let brng = y.atan2(x).to_degrees();
     (brng + 360.0) % 360.0
 }
+
+/// Allocate a byte buffer in WASM linear memory
+#[no_mangle]
+pub extern "C" fn alloc_u8_buffer(size: usize) -> *mut u8 {
+    let mut vec = Vec::<u8>::with_capacity(size);
+    let ptr = vec.as_mut_ptr();
+    std::mem::forget(vec);
+    ptr
+}
+
+/// Deallocate a byte buffer in WASM linear memory
+#[no_mangle]
+pub extern "C" fn dealloc_u8_buffer(ptr: *mut u8, size: usize) {
+    if !ptr.is_null() {
+        unsafe {
+            let _ = Vec::from_raw_parts(ptr, size, size);
+        }
+    }
+}
+
+/// Vectorized unpack RGBA raw weather tile pixels into scalar physical values
+/// Formula: physical = (R + G * 256 + B * 65536) * scale + offset
+#[no_mangle]
+pub extern "C" fn unpack_rgba_to_values(
+    rgba_ptr: *const u8,
+    out_ptr: *mut f32,
+    pixel_count: usize,
+    scale: f32,
+    offset: f32,
+) {
+    if rgba_ptr.is_null() || out_ptr.is_null() || pixel_count == 0 {
+        return;
+    }
+
+    unsafe {
+        for i in 0..pixel_count {
+            let base = i * 4;
+            let r = *rgba_ptr.add(base) as f32;
+            let g = *rgba_ptr.add(base + 1) as f32;
+            let b = *rgba_ptr.add(base + 2) as f32;
+            let a = *rgba_ptr.add(base + 3);
+
+            if a == 0 {
+                *out_ptr.add(i) = -9999.0;
+            } else {
+                let raw_val = (r as u32 | ((g as u32) << 8) | ((b as u32) << 16)) as f64;
+                *out_ptr.add(i) = (raw_val * (scale as f64) + (offset as f64)) as f32;
+            }
+        }
+    }
+}
+
+/// Vectorized unpack RGBA wind tiles into separate U and V orthogonal velocity arrays
+#[no_mangle]
+pub extern "C" fn unpack_wind_uv(
+    rgba_ptr: *const u8,
+    u_out: *mut f32,
+    v_out: *mut f32,
+    pixel_count: usize,
+    scale: f32,
+    offset: f32,
+) {
+    if rgba_ptr.is_null() || u_out.is_null() || v_out.is_null() || pixel_count == 0 {
+        return;
+    }
+
+    unsafe {
+        for i in 0..pixel_count {
+            let base = i * 4;
+            let r = *rgba_ptr.add(base) as f32;
+            let g = *rgba_ptr.add(base + 1) as f32;
+            *u_out.add(i) = r * scale + offset;
+            *v_out.add(i) = g * scale + offset;
+        }
+    }
+}
+
+/// Unpack Doppler radar reflectivity (dBZ) with clutter noise filtering
+#[no_mangle]
+pub extern "C" fn filter_radar_dbz(
+    rgba_ptr: *const u8,
+    out_dbz: *mut f32,
+    pixel_count: usize,
+    min_dbz: f32,
+) {
+    if rgba_ptr.is_null() || out_dbz.is_null() || pixel_count == 0 {
+        return;
+    }
+
+    unsafe {
+        for i in 0..pixel_count {
+            let base = i * 4;
+            let r = *rgba_ptr.add(base) as f32;
+            let a = *rgba_ptr.add(base + 3);
+            if a == 0 {
+                *out_dbz.add(i) = 0.0;
+            } else {
+                let dbz = r * 0.5 - 32.0;
+                *out_dbz.add(i) = if dbz >= min_dbz { dbz } else { 0.0 };
+            }
+        }
+    }
+}
+

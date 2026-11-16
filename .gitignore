@@ -5,3 +5,6 @@ Thumbs.db
 target/
 bmk_wasm/target/
 rust_server/target/
+
+bmk_preprocessor/target/
+tile_cache/
