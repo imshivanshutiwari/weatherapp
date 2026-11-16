@@ -769,4 +769,262 @@ pub extern "C" fn calculate_moon_illumination(epoch_seconds: f64) -> f64 {
     illum
 }
 
+// =========================================================================
+// 7. MARCHING SQUARES ISOBAR & CONTOUR SEGMENT GENERATOR
+// =========================================================================
+
+/// Marching Squares 2D contour segment generator
+/// Given a 2D scalar field (width x height) and a target isovalue (e.g. 1012.0 hPa),
+/// extracts line segments [x1, y1, x2, y2, ...] into out_segments_ptr.
+/// Returns the number of segments generated.
+#[no_mangle]
+pub extern "C" fn generate_marching_squares_isobars(
+    grid_ptr: *const f32,
+    w: usize,
+    h: usize,
+    isovalue: f32,
+    out_segments_ptr: *mut f32,
+    max_segments: usize,
+) -> usize {
+    if grid_ptr.is_null() || out_segments_ptr.is_null() || w < 2 || h < 2 || max_segments == 0 {
+        return 0;
+    }
+
+    let mut count = 0;
+
+    let interp = |val_a: f32, val_b: f32, pos_a: f32, pos_b: f32| -> f32 {
+        let denom = val_b - val_a;
+        if denom.abs() < 1e-6 {
+            (pos_a + pos_b) * 0.5
+        } else {
+            let t = (isovalue - val_a) / denom;
+            pos_a + t.clamp(0.0, 1.0) * (pos_b - pos_a)
+        }
+    };
+
+    unsafe {
+        for y in 0..(h - 1) {
+            for x in 0..(w - 1) {
+                if count >= max_segments {
+                    return count;
+                }
+
+                let v0 = *grid_ptr.add(y * w + x);
+                let v1 = *grid_ptr.add(y * w + (x + 1));
+                let v2 = *grid_ptr.add((y + 1) * w + (x + 1));
+                let v3 = *grid_ptr.add((y + 1) * w + x);
+
+                let fx = x as f32;
+                let fy = y as f32;
+
+                let mut case_idx = 0;
+                if v0 >= isovalue { case_idx |= 1; }
+                if v1 >= isovalue { case_idx |= 2; }
+                if v2 >= isovalue { case_idx |= 4; }
+                if v3 >= isovalue { case_idx |= 8; }
+
+                if case_idx == 0 || case_idx == 15 {
+                    continue;
+                }
+
+                let top = (interp(v0, v1, fx, fx + 1.0), fy);
+                let right = (fx + 1.0, interp(v1, v2, fy, fy + 1.0));
+                let bottom = (interp(v3, v2, fx, fx + 1.0), fy + 1.0);
+                let left = (fx, interp(v0, v3, fy, fy + 1.0));
+
+                let mut emit = |p1: (f32, f32), p2: (f32, f32)| {
+                    if count < max_segments {
+                        let idx = count * 4;
+                        *out_segments_ptr.add(idx) = p1.0;
+                        *out_segments_ptr.add(idx + 1) = p1.1;
+                        *out_segments_ptr.add(idx + 2) = p2.0;
+                        *out_segments_ptr.add(idx + 3) = p2.1;
+                        count += 1;
+                    }
+                };
+
+                match case_idx {
+                    1 | 14 => emit(left, top),
+                    2 | 13 => emit(top, right),
+                    3 | 12 => emit(left, right),
+                    4 | 11 => emit(right, bottom),
+                    5 => { emit(left, top); emit(right, bottom); },
+                    6 | 9 => emit(top, bottom),
+                    7 | 8 => emit(left, bottom),
+                    10 => { emit(top, right); emit(bottom, left); },
+                    _ => {}
+                }
+            }
+        }
+    }
+
+    count
+}
+
+// =========================================================================
+// 8. AVIATION METAR WEATHER REPORT DECODER
+// =========================================================================
+
+/// Zero-copy METAR parser: extracts wind, gusts, visibility, temperature, dewpoint,
+/// QNH pressure, and flight category.
+/// Output written to out_result:
+/// [wind_dir_deg, wind_speed_kt, wind_gust_kt, visibility_meters, temp_c, dewpoint_c, qnh_hpa, flight_category]
+/// Flight categories: 0=VFR, 1=MVFR, 2=IFR, 3=LIFR
+#[no_mangle]
+pub extern "C" fn parse_metar_report(
+    metar_bytes_ptr: *const u8,
+    len: usize,
+    out_result: *mut f32,
+) -> bool {
+    if metar_bytes_ptr.is_null() || out_result.is_null() || len == 0 {
+        return false;
+    }
+
+    let slice = unsafe { std::slice::from_raw_parts(metar_bytes_ptr, len) };
+    let text = match std::str::from_utf8(slice) {
+        Ok(s) => s,
+        Err(_) => return false,
+    };
+
+    let mut wind_dir = -1.0f32;
+    let mut wind_spd = 0.0f32;
+    let mut wind_gst = 0.0f32;
+    let mut visibility_m = 9999.0f32;
+    let mut temp_c = 15.0f32;
+    let mut dew_c = 10.0f32;
+    let mut qnh = 1013.25f32;
+
+    for token in text.split_whitespace() {
+        if token.ends_with("KT") && token.len() >= 5 {
+            let core = &token[..token.len() - 2];
+            if core.starts_with("VRB") {
+                wind_dir = 0.0;
+                if let Ok(spd) = core[3..].parse::<f32>() {
+                    wind_spd = spd;
+                }
+            } else if core.contains('G') {
+                let parts: Vec<&str> = core.split('G').collect();
+                if parts.len() == 2 {
+                    if let Ok(dir) = parts[0][..3].parse::<f32>() { wind_dir = dir; }
+                    if let Ok(spd) = parts[0][3..].parse::<f32>() { wind_spd = spd; }
+                    if let Ok(gst) = parts[1].parse::<f32>() { wind_gst = gst; }
+                }
+            } else if core.len() >= 5 {
+                if let Ok(dir) = core[..3].parse::<f32>() { wind_dir = dir; }
+                if let Ok(spd) = core[3..].parse::<f32>() { wind_spd = spd; }
+            }
+        } else if token.len() == 4 && token.chars().all(|c| c.is_ascii_digit()) {
+            if let Ok(v) = token.parse::<f32>() {
+                visibility_m = v;
+            }
+        } else if token.ends_with("SM") {
+            if let Ok(sm) = token[..token.len() - 2].parse::<f32>() {
+                visibility_m = sm * 1609.34;
+            }
+        } else if token.contains('/') && !token.starts_with("FEW") && !token.starts_with("SCT") && !token.starts_with("BKN") && !token.starts_with("OVC") {
+            let parts: Vec<&str> = token.split('/').collect();
+            if parts.len() == 2 {
+                let parse_temp = |s: &str| -> Option<f32> {
+                    if s.starts_with('M') {
+                        s[1..].parse::<f32>().ok().map(|v| -v)
+                    } else {
+                        s.parse::<f32>().ok()
+                    }
+                };
+                if let Some(t) = parse_temp(parts[0]) { temp_c = t; }
+                if let Some(d) = parse_temp(parts[1]) { dew_c = d; }
+            }
+        } else if token.starts_with('Q') && token.len() == 5 {
+            if let Ok(p) = token[1..].parse::<f32>() {
+                qnh = p;
+            }
+        } else if token.starts_with('A') && token.len() == 5 {
+            if let Ok(inhg) = token[1..].parse::<f32>() {
+                qnh = (inhg / 100.0) * 33.8639;
+            }
+        }
+    }
+
+    let flight_category = if visibility_m >= 8000.0 {
+        0.0f32 // VFR
+    } else if visibility_m >= 4800.0 {
+        1.0f32 // MVFR
+    } else if visibility_m >= 1600.0 {
+        2.0f32 // IFR
+    } else {
+        3.0f32 // LIFR
+    };
+
+    unsafe {
+        *out_result = wind_dir;
+        *out_result.add(1) = wind_spd;
+        *out_result.add(2) = wind_gst;
+        *out_result.add(3) = visibility_m;
+        *out_result.add(4) = temp_c;
+        *out_result.add(5) = dew_c;
+        *out_result.add(6) = qnh;
+        *out_result.add(7) = flight_category;
+    }
+
+    true
+}
+
+// =========================================================================
+// 9. CUBIC HERMITE COLOR PALETTE SPLINE INTERPOLATOR
+// =========================================================================
+
+/// Smooth Hermite spline RGBA palette lookup table generator
+/// Interpolates between stops into out_rgba (size: lut_size * 4 bytes)
+#[no_mangle]
+pub extern "C" fn interpolate_color_palette_spline(
+    stop_vals_ptr: *const f32,
+    stop_rgba_ptr: *const u8,
+    stops_count: usize,
+    lut_size: usize,
+    min_val: f32,
+    max_val: f32,
+    out_rgba_ptr: *mut u8,
+) {
+    if stop_vals_ptr.is_null() || stop_rgba_ptr.is_null() || out_rgba_ptr.is_null() || stops_count < 2 || lut_size == 0 || min_val >= max_val {
+        return;
+    }
+
+    let val_range = max_val - min_val;
+
+    unsafe {
+        for step in 0..lut_size {
+            let norm = step as f32 / (lut_size - 1) as f32;
+            let current_val = min_val + norm * val_range;
+
+            let mut left_idx = 0;
+            for i in 0..(stops_count - 1) {
+                if current_val >= *stop_vals_ptr.add(i) {
+                    left_idx = i;
+                }
+            }
+            let right_idx = (left_idx + 1).min(stops_count - 1);
+
+            let v_left = *stop_vals_ptr.add(left_idx);
+            let v_right = *stop_vals_ptr.add(right_idx);
+
+            let t = if (v_right - v_left).abs() > 1e-6 {
+                ((current_val - v_left) / (v_right - v_left)).clamp(0.0, 1.0)
+            } else {
+                0.0
+            };
+
+            let s = t * t * (3.0 - 2.0 * t);
+
+            let out_idx = step * 4;
+            for ch in 0..4 {
+                let c_left = *stop_rgba_ptr.add(left_idx * 4 + ch) as f32;
+                let c_right = *stop_rgba_ptr.add(right_idx * 4 + ch) as f32;
+                let interpolated = (c_left + s * (c_right - c_left)).round().clamp(0.0, 255.0) as u8;
+                *out_rgba_ptr.add(out_idx + ch) = interpolated;
+            }
+        }
+    }
+}
+
+
 
