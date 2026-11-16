@@ -8,3 +8,7 @@ rust_server/target/
 
 bmk_preprocessor/target/
 tile_cache/
+
+bmk_launcher/target/
+
+/BhartiyaMarutKendra.exe
