@@ -1,6 +1,6 @@
 {
-    "short_name": "Windy",
-    "name": "Windy.com",
+    "short_name": "BMK",
+    "name": "भारतीय मारुत केंद्र (Bhartiya Marut Kendra)",
     "icons": [
         {
             "src": "https://img.windy.com/albums/icons/icon512x512.png?w=192",
@@ -31,5 +31,5 @@
     "display_override": ["minimal-ui", "standalone"],
     "scope": "/",
     "theme_color": "#4d4d4d",
-    "description": "Professional weather forecast service"
+    "description": "भारतीय मारुत केंद्र - Advanced Meteorological Platform"
 }
