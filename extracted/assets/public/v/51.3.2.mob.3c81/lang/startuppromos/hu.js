@@ -1,1 +1,1 @@
-export default{STARTUP_OBSOLETE_APP:"A Windy.com App ezen verziója <b>elavult</b>, és hamarosan megszűnik működni. Kérjük, <b>frissítse a Windy.com Appját</b> a legújabb verzióra."};
+export default{STARTUP_OBSOLETE_APP:"A WeatherApp App ezen verziója <b>elavult</b>, és hamarosan megszűnik működni. Kérjük, <b>frissítse a WeatherApp Appját</b> a legújabb verzióra."};

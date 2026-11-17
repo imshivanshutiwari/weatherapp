@@ -1,1 +1,1 @@
-export default{WATCHFACES_TITLE:"Windy Watch Face",WATCHFACES_SUBTITLE:"Add a Windy Watch Face to your Apple Watch and have forecast right on your wrist.",WATCHFACES_ADDBUTTON:"Add Apple Watch Face"};
+export default{WATCHFACES_TITLE:"WeatherApp Watch Face",WATCHFACES_SUBTITLE:"Add a WeatherApp Watch Face to your Apple Watch and have forecast right on your wrist.",WATCHFACES_ADDBUTTON:"Add Apple Watch Face"};

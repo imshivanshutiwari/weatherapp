@@ -1,1 +1,1 @@
-export default{STARTUP_OBSOLETE_APP:"Denne version af Windy.com-appen er <b>forældet</b> og vil snart stoppe med at virke. Opdater venligst <b>din Windy.com-app</b> til den nyeste version."};
+export default{STARTUP_OBSOLETE_APP:"Denne version af WeatherApp-appen er <b>forældet</b> og vil snart stoppe med at virke. Opdater venligst <b>din WeatherApp-app</b> til den nyeste version."};

@@ -1,1 +1,1 @@
-export default{STARTUP_OBSOLETE_APP:"Táto verzia aplikácie Windy.com je <b>zastaraná</b> a čoskoro prestane fungovať. Prosím, <b>aktualizujte svoju aplikáciu Windy.com</b> na najnovšiu verziu."};
+export default{STARTUP_OBSOLETE_APP:"Táto verzia aplikácie WeatherApp je <b>zastaraná</b> a čoskoro prestane fungovať. Prosím, <b>aktualizujte svoju aplikáciu WeatherApp</b> na najnovšiu verziu."};
