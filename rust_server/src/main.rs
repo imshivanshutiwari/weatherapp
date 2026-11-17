@@ -49,12 +49,12 @@ async fn main() {
         .tcp_nodelay(true)
         .timeout(Duration::from_secs(12))
         .build()
-        .expect("Failed to create HTTP client");
+        .expect("Failed to build HTTP client");
 
-    // Tier-1: High-concurrency Moka in-memory cache for 5,000 tiles
+    // Two-tier cache: 10,000 tiles in high-speed RAM, TTL 24h
     let tile_cache = Cache::builder()
-        .max_capacity(5_000)
-        .time_to_idle(Duration::from_secs(3600))
+        .max_capacity(10_000)
+        .time_to_live(Duration::from_secs(86400))
         .build();
 
     let state = Arc::new(AppState {
@@ -65,14 +65,20 @@ async fn main() {
 
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PUT,
+            Method::DELETE,
+            Method::OPTIONS,
+        ])
         .allow_headers(Any);
 
     let serve_dir = ServeDir::new(PathBuf::from(PUBLIC_DIR))
         .append_index_html_on_directories(true);
 
     let app = Router::new()
-        // Proxy routes
+        // Core Proxy routes
         .route("/rdr/*path", get(handle_rdr))
         .route("/sat/*path", get(handle_sat))
         .route("/ims/*path", get(handle_ims))
@@ -89,6 +95,14 @@ async fn main() {
         .route("/tides/*path", get(handle_node_tides))
         .route("/pois/*path", get(handle_node_pois))
         .route("/obs/*path", get(handle_node_obs))
+        // Upstream Domain Proxies (Masks all 5 external Windy domains)
+        .route("/upstream-tiles/*path", get(handle_upstream_tiles))
+        .route("/labels/*path", get(handle_upstream_labels))
+        .route("/upstream-node/*path", get(handle_upstream_node).post(handle_upstream_node))
+        .route("/upstream-nodes/*path", get(handle_upstream_nodes))
+        .route("/upstream-account/*path", get(handle_upstream_account).post(handle_upstream_account))
+        .route("/upstream-www/*path", get(handle_upstream_www))
+        .route("/patch/*path", get(handle_patch))
         .route(
             "/users/*path",
             get(handle_node_users)
@@ -158,6 +172,7 @@ async fn write_disk_cache(
     if let Some(parent) = bin_path.parent() {
         let _ = tokio::fs::create_dir_all(parent).await;
     }
+
     let _ = tokio::fs::write(&bin_path, bytes).await;
     let _ = tokio::fs::write(&meta_path, content_type).await;
 }
@@ -166,25 +181,23 @@ fn make_tile_response(
     status: StatusCode,
     content_type: &str,
     bytes: Bytes,
-    cache_header: &str,
+    cache_status: &str,
 ) -> Response<Body> {
-    let mut res = Response::builder()
+    Response::builder()
         .status(status)
+        .header(
+            header::CONTENT_TYPE,
+            if content_type.is_empty() {
+                "image/png"
+            } else {
+                content_type
+            },
+        )
         .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-        .header(header::CACHE_CONTROL, "public, max-age=86400")
-        .header("X-BMK-Cache", cache_header)
-        .header(header::CONTENT_LENGTH, bytes.len().to_string());
-
-    if !content_type.is_empty() {
-        res = res.header(header::CONTENT_TYPE, content_type);
-    }
-
-    res.body(Body::from(bytes)).unwrap_or_else(|_| {
-        Response::builder()
-            .status(StatusCode::INTERNAL_SERVER_ERROR)
-            .body(Body::empty())
-            .unwrap()
-    })
+        .header(header::CACHE_CONTROL, "public, max-age=86400, immutable")
+        .header("X-Cache", cache_status)
+        .body(Body::from(bytes))
+        .unwrap()
 }
 
 async fn handle_rdr(
@@ -245,26 +258,105 @@ async fn handle_tiles(
     proxy_request(&state, &url, true, &cache_key).await
 }
 
+async fn handle_upstream_tiles(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> impl IntoResponse {
+    let query = req.uri().query().unwrap_or("");
+    let cache_key = format!("/upstream-tiles/{}", path);
+    let url = if query.is_empty() {
+        format!("https://tiles.windy.com/{}", path)
+    } else {
+        format!("https://tiles.windy.com/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, true, &cache_key).await
+}
+
+async fn handle_upstream_labels(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> impl IntoResponse {
+    let query = req.uri().query().unwrap_or("");
+    let cache_key = format!("/labels/{}", path);
+    let url = if query.is_empty() {
+        format!("https://tiles.windy.com/labels/{}", path)
+    } else {
+        format!("https://tiles.windy.com/labels/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, true, &cache_key).await
+}
+
+async fn handle_upstream_node(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> impl IntoResponse {
+    let query = req.uri().query().unwrap_or("");
+    let url = if query.is_empty() {
+        format!("https://node.windy.com/{}", path)
+    } else {
+        format!("https://node.windy.com/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, false, "").await
+}
+
+async fn handle_upstream_nodes(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> impl IntoResponse {
+    let query = req.uri().query().unwrap_or("");
+    let url = if query.is_empty() {
+        format!("https://node-s.windy.com/{}", path)
+    } else {
+        format!("https://node-s.windy.com/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, false, "").await
+}
+
+async fn handle_upstream_account(
+    State(_state): State<Arc<AppState>>,
+    Path(_path): Path<String>,
+    _req: Request<Body>,
+) -> impl IntoResponse {
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/json")
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+        .body(Body::from(r#"{"status":"ok","tier":"premium","auth":true}"#))
+        .unwrap()
+}
+
+async fn handle_upstream_www(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> impl IntoResponse {
+    let query = req.uri().query().unwrap_or("");
+    let url = if query.is_empty() {
+        format!("https://www.windy.com/{}", path)
+    } else {
+        format!("https://www.windy.com/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, false, "").await
+}
+
+async fn handle_patch() -> impl IntoResponse {
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/javascript")
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+        .body(Body::from("// Local Patch Script OK\n"))
+        .unwrap()
+}
+
 async fn handle_node_services(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    // Local mock for geolocation/positioning (zero latency, offline safe, no external leak)
-    if path == "umisteni" {
-        return Response::builder()
-            .status(StatusCode::OK)
-            .header(header::CONTENT_TYPE, "application/json")
-            .body(Body::from(r#"{"country":"IN","region":"","eu":"0","timezone":"Asia/Kolkata","city":"New Delhi","ll":[28.6139,77.2090],"metro":0,"area":1000,"ip":"127.0.0.1"}"#))
-            .unwrap();
-    }
-    // Telemetry and logging null-sink: instantly absorb without leaking to upstream
-    if path.starts_with("log") || path.starts_with("telemetry") || path.starts_with("analytics") {
-        return Response::builder()
-            .status(StatusCode::NO_CONTENT)
-            .body(Body::empty())
-            .unwrap();
-    }
     handle_node_proxy(state, format!("/services/{}", path), req).await
 }
 
@@ -313,8 +405,8 @@ async fn handle_node_citytile(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    let query = req.uri().query().unwrap_or("");
     let cache_key = req.uri().to_string();
+    let query = req.uri().query().unwrap_or("");
     let url = if query.is_empty() {
         format!("https://node.windy.com/citytile/{}", path)
     } else {
@@ -337,12 +429,12 @@ async fn handle_node_tides(
     req: Request<Body>,
 ) -> Response<Body> {
     let resp = handle_node_proxy(state, format!("/tides/{}", path), req).await;
-    if resp.status() == StatusCode::UNAUTHORIZED || resp.status() == StatusCode::NOT_FOUND {
+    if resp.status().is_client_error() || resp.status().is_server_error() {
         return Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, "application/json")
             .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-            .body(Body::from(r#"{"data":[],"status":"ok"}"#))
+            .body(Body::from(r#"{"status":"ok","data":[]}"#))
             .unwrap();
     }
     resp
@@ -354,12 +446,12 @@ async fn handle_node_pois(
     req: Request<Body>,
 ) -> Response<Body> {
     let resp = handle_node_proxy(state, format!("/pois/{}", path), req).await;
-    if resp.status() == StatusCode::NOT_FOUND {
+    if resp.status().is_client_error() || resp.status().is_server_error() {
         return Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, "application/json")
             .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-            .body(Body::from(r#"{"data":[],"pois":[]}"#))
+            .body(Body::from(r#"{"status":"ok","pois":[],"data":[]}"#))
             .unwrap();
     }
     resp
@@ -489,6 +581,7 @@ async fn proxy_request(
             "User-Agent",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         )
+        .header("Referer", "https://www.windy.com/")
         .send()
         .await
     {
@@ -542,7 +635,7 @@ async fn proxy_request(
             }
             Response::builder()
                 .status(StatusCode::BAD_GATEWAY)
-                .body(Body::from(format!("Upstream error: {}", err)))
+                .body(Body::from(format!("Error fetching upstream: {}", err)))
                 .unwrap()
         }
     }
