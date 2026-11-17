@@ -81,6 +81,14 @@ async fn main() {
         .route("/metadata/*path", get(handle_node_metadata))
         .route("/maptile/*path", get(handle_node_maptile))
         .route("/tc/*path", get(handle_node_tc))
+        .route("/forecast/*path", get(handle_node_forecast))
+        .route("/search/*path", get(handle_node_search))
+        .route("/webcams/*path", get(handle_node_webcams))
+        .route("/citytile/*path", get(handle_node_citytile))
+        .route("/capalerts/*path", get(handle_node_capalerts))
+        .route("/tides/*path", get(handle_node_tides))
+        .route("/pois/*path", get(handle_node_pois))
+        .route("/obs/*path", get(handle_node_obs))
         .route(
             "/users/*path",
             get(handle_node_users)
@@ -274,6 +282,95 @@ async fn handle_node_maptile(
     req: Request<Body>,
 ) -> Response<Body> {
     handle_node_proxy(state, format!("/maptile/{}", path), req).await
+}
+
+async fn handle_node_forecast(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    handle_node_proxy(state, format!("/forecast/{}", path), req).await
+}
+
+async fn handle_node_search(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    handle_node_proxy(state, format!("/search/{}", path), req).await
+}
+
+async fn handle_node_webcams(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    handle_node_proxy(state, format!("/webcams/{}", path), req).await
+}
+
+async fn handle_node_citytile(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    let query = req.uri().query().unwrap_or("");
+    let cache_key = req.uri().to_string();
+    let url = if query.is_empty() {
+        format!("https://node.windy.com/citytile/{}", path)
+    } else {
+        format!("https://node.windy.com/citytile/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, true, &cache_key).await
+}
+
+async fn handle_node_capalerts(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    handle_node_proxy(state, format!("/capalerts/{}", path), req).await
+}
+
+async fn handle_node_tides(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    let resp = handle_node_proxy(state, format!("/tides/{}", path), req).await;
+    if resp.status() == StatusCode::UNAUTHORIZED || resp.status() == StatusCode::NOT_FOUND {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(r#"{"data":[],"status":"ok"}"#))
+            .unwrap();
+    }
+    resp
+}
+
+async fn handle_node_pois(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    let resp = handle_node_proxy(state, format!("/pois/{}", path), req).await;
+    if resp.status() == StatusCode::NOT_FOUND {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(r#"{"data":[],"pois":[]}"#))
+            .unwrap();
+    }
+    resp
+}
+
+async fn handle_node_obs(
+    State(state): State<Arc<AppState>>,
+    Path(path): Path<String>,
+    req: Request<Body>,
+) -> Response<Body> {
+    handle_node_proxy(state, format!("/obs/{}", path), req).await
 }
 
 async fn handle_node_tc(
