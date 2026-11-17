@@ -20,7 +20,7 @@ use tower_http::{
     cors::{Any, CorsLayer},
     services::ServeDir,
 };
-use tracing::{error, info};
+use tracing::error;
 
 const PORT: u16 = 8080;
 const PUBLIC_DIR: &str = r"C:\Users\shiva\Windy_App\extracted\assets\public";
@@ -82,6 +82,7 @@ async fn main() {
         .route("/maptile/*path", get(handle_node_maptile))
         .route("/tc/*path", get(handle_node_tc))
         .route("/users/*path", get(handle_node_users))
+        .route("/api/*path", get(handle_api).post(handle_api))
         // Static assets fallback
         .fallback_service(serve_dir)
         .layer(cors)
@@ -233,7 +234,22 @@ async fn handle_node_services(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
+    // Local mock for geolocation/positioning (zero latency, offline safe, no external leak)
+    if path == "umisteni" {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .body(Body::from(r#"{"country":"IN","region":"","eu":"0","timezone":"Asia/Kolkata","city":"New Delhi","ll":[28.6139,77.2090],"metro":0,"area":1000,"ip":"127.0.0.1"}"#))
+            .unwrap();
+    }
+    // Telemetry and logging null-sink: instantly absorb without leaking to upstream
+    if path.starts_with("log") || path.starts_with("telemetry") || path.starts_with("analytics") {
+        return Response::builder()
+            .status(StatusCode::NO_CONTENT)
+            .body(Body::empty())
+            .unwrap();
+    }
     handle_node_proxy(state, format!("/services/{}", path), req).await
 }
 
@@ -241,7 +257,7 @@ async fn handle_node_metadata(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     handle_node_proxy(state, format!("/metadata/{}", path), req).await
 }
 
@@ -249,7 +265,7 @@ async fn handle_node_maptile(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     handle_node_proxy(state, format!("/maptile/{}", path), req).await
 }
 
@@ -257,7 +273,7 @@ async fn handle_node_tc(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     handle_node_proxy(state, format!("/tc/{}", path), req).await
 }
 
@@ -265,15 +281,32 @@ async fn handle_node_users(
     State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     handle_node_proxy(state, format!("/users/{}", path), req).await
+}
+
+async fn handle_api(
+    Path(path): Path<String>,
+) -> Response<Body> {
+    if path == "info" || path == "v1/info" {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .body(Body::from(r#"{"auth":true,"userInfo":{"auth":true,"username":"Bhartiya Marut Kendra User","tier":"premium","joindate":1700000000,"logindate":1700000000},"subscriptionInfo":{"status":"active","tier":"premium","state":"active","platform":"web","expires":4102444800000}}"#))
+            .unwrap();
+    }
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/json")
+        .body(Body::from(r#"{"status":"ok"}"#))
+        .unwrap()
 }
 
 async fn handle_node_proxy(
     state: Arc<AppState>,
     path: String,
     req: Request<Body>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     let query = req.uri().query().unwrap_or("");
     let url = if query.is_empty() {
         format!("https://node.windy.com{}", path)

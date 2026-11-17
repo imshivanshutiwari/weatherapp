@@ -1,4 +1,4 @@
-import{utils as e}from"@windyCore";const t=e,n=(e,t)=>`<?xml version="1.0" encoding="utf-8"?>
+import{utils as e}from"@bmkCore";const t=e,n=(e,t)=>`<?xml version="1.0" encoding="utf-8"?>
         <gpx creator="Windy.com" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
             <rte>
                 <name>Windy.com ${e}</name>

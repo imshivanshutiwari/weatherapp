@@ -12,3 +12,6 @@ tile_cache/
 bmk_launcher/target/
 
 /BhartiyaMarutKendra.exe
+
+graphify-out/cache/
+*.tmp
