@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="favSun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="favCloud" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#93c5fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#favBg)"/>
+  <!-- Sun -->
+  <circle cx="26" cy="24" r="12" fill="url(#favSun)"/>
+  <!-- Cloud -->
+  <path d="M 20 44 A 11 11 0 0 1 36 34 A 14 14 0 0 1 52 42 A 9 9 0 0 1 48 52 L 20 52 A 8 8 0 0 1 20 44 Z" fill="url(#favCloud)"/>
+  <!-- Wind streak -->
+  <path d="M 12 48 Q 22 48 30 48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
