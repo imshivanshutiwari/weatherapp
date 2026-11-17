@@ -1,0 +1,14 @@
+/* Custom Typography Override */
+* {
+    font-family: "Times New Roman", Times, "Comic Sans MS", cursive, serif !important;
+}
+
+@font-face {
+    font-family: 'bariolmedium';
+    src: local('Times New Roman'), local('Times'), serif;
+}
+
+@font-face {
+    font-family: 'bariolnumbers';
+    src: local('Times New Roman'), local('Times'), serif;
+}
