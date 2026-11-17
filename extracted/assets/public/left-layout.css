@@ -1,0 +1,25 @@
+/* Left Sidebar Layout Extension */
+
+/* 1. Shift floating action dock to LEFT */
+.mobile-ui {
+    right: auto !important;
+    left: 14px !important;
+}
+
+/* 2. Menu drawer slides in cleanly on the LEFT */
+.plugin-rhpane,
+#plugin-menu,
+#rhpane,
+.rhpane {
+    right: auto !important;
+    left: 0px !important;
+    border-left: none !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 15px 0 35px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* 3. Reposition top search bar smoothly so it never collides */
+#search,
+.search-box {
+    left: 72px !important;
+}
