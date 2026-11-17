@@ -81,7 +81,14 @@ async fn main() {
         .route("/metadata/*path", get(handle_node_metadata))
         .route("/maptile/*path", get(handle_node_maptile))
         .route("/tc/*path", get(handle_node_tc))
-        .route("/users/*path", get(handle_node_users))
+        .route(
+            "/users/*path",
+            get(handle_node_users)
+                .post(handle_users_data)
+                .put(handle_users_data)
+                .delete(handle_users_data),
+        )
+        .route("/plugins/list", get(handle_plugins_list))
         .route("/api/*path", get(handle_api).post(handle_api))
         // Static assets fallback
         .fallback_service(serve_dir)
@@ -282,7 +289,45 @@ async fn handle_node_users(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
+    if path.starts_with("v1/data") {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(r#"{"status":"ok","data":[],"value":[]}"#))
+            .unwrap();
+    }
     handle_node_proxy(state, format!("/users/{}", path), req).await
+}
+
+async fn handle_plugins_list() -> Response<Body> {
+    let path = PathBuf::from(PUBLIC_DIR).join("plugins_list.json");
+    if let Ok(bytes) = tokio::fs::read(&path).await {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .header(header::CACHE_CONTROL, "public, max-age=3600")
+            .body(Body::from(bytes))
+            .unwrap();
+    }
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/json")
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+        .body(Body::from("[]"))
+        .unwrap()
+}
+
+async fn handle_users_data(
+    Path(_path): Path<String>,
+) -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/json")
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+        .body(Body::from(r#"{"status":"ok","value":{}}"#))
+        .unwrap()
 }
 
 async fn handle_api(
