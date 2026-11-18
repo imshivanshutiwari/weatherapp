@@ -1,8 +1,21 @@
 /* Custom Typography Override */
-* {
+
+/* 1. Only apply Times New Roman to regular text elements */
+body,
+p,
+a:not([class*="icon"]):not(.closing-x):not(.play-pause),
+button:not([class*="icon"]):not(.closing-x):not(.play-pause),
+input, select, textarea,
+h1, h2, h3, h4, h5, h6,
+li, td, th,
+#search-input,
+.menu-item,
+.day,
+.timecode .box {
     font-family: "Times New Roman", Times, "Comic Sans MS", cursive, serif !important;
 }
 
+/* 2. Map standard Bariol fonts to Times New Roman */
 @font-face {
     font-family: 'bariolmedium';
     src: local('Times New Roman'), local('Times'), serif;
@@ -11,4 +24,17 @@
 @font-face {
     font-family: 'bariolnumbers';
     src: local('Times New Roman'), local('Times'), serif;
+}
+
+/* 3. STRICTLY PRESERVE ICONFONT FOR PLAY, CUT (X), AND ALL SYSTEM GLYPHS */
+.closing-x,
+.closing-x::before,
+.closing-x::after,
+.play-pause,
+.play-pause::before,
+.play-pause::after,
+.iconfont,
+[class*="iconfont"],
+[class*="icon-"] {
+    font-family: iconfont !important;
 }
