@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Gotu&display=swap');
+
+/* Gotu Font Definition & Utility Class */
+.gotu-regular {
+  font-family: "Gotu", sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
 /* Custom Typography Override */
 
-/* 1. Only apply Times New Roman to regular text elements */
+/* 1. Apply Gotu to all regular text elements */
 body,
 p,
 a:not([class*="icon"]):not(.closing-x):not(.play-pause),
@@ -12,18 +21,18 @@ li, td, th,
 .menu-item,
 .day,
 .timecode .box {
-    font-family: "Times New Roman", Times, "Comic Sans MS", cursive, serif !important;
+    font-family: "Gotu", sans-serif !important;
 }
 
-/* 2. Map standard Bariol fonts to Times New Roman */
+/* 2. Map standard Bariol fonts to Gotu */
 @font-face {
     font-family: 'bariolmedium';
-    src: local('Times New Roman'), local('Times'), serif;
+    src: local('Gotu'), url('https://fonts.gstatic.com/s/gotu/v16/qWcnB6qu3T3rXyqS.woff2') format('woff2'), sans-serif;
 }
 
 @font-face {
     font-family: 'bariolnumbers';
-    src: local('Times New Roman'), local('Times'), serif;
+    src: local('Gotu'), url('https://fonts.gstatic.com/s/gotu/v16/qWcnB6qu3T3rXyqS.woff2') format('woff2'), sans-serif;
 }
 
 /* 3. STRICTLY PRESERVE ICONFONT FOR PLAY, CUT (X), AND ALL SYSTEM GLYPHS */
@@ -71,13 +80,14 @@ li, td, th,
     max-width: 320px;
     height: 72px;
     margin: 10px auto 16px auto;
-    background: url("data:image/svg+xml;utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20width%3D%22380px%22%20height%3D%2275px%22%20viewBox%3D%220%200%20380%2075%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22marutGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2338bdf8%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%3Cfilter%20id%3D%22shadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%222%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23000000%22%20flood-opacity%3D%220.6%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Ffilter%3E%0A%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(10%2C%2010)%22%20filter%3D%22url(%23shadow)%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%2036%20C6%2036%200%2027%200%2018%20C0%208%209%200%2019%200%20C28%200%2036%206%2037%2015%20C41%2014%2045%2014%2048%2016%20C53%2019%2054%2025%2053%2029%20C51%2034%2046%2036%2042%2036%20Z%22%20fill%3D%22url(%23marutGrad)%22%20opacity%3D%220.95%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2045%20Q%2027%2042%2048%2045%20T%2066%2045%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%224.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%2054%20Q%2020%2051%2038%2054%20T%2056%2054%22%20stroke%3D%22%23bae6fd%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2282%22%20y%3D%2250%22%20font-family%3D%22'Noto%20Sans%20Devanagari'%2C%20'Mangal'%2C%20'Nirmala%20UI'%2C%20sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22900%22%20fill%3D%22%23FFFFFF%22%20filter%3D%22url(%23shadow)%22%3E%0A%20%20%20%20%20%20%20%20%26%23x092D%3B%26%23x093E%3B%26%23x0930%3B%26%23x0924%3B%26%23x0940%3B%26%23x092F%3B%20%3Ctspan%20fill%3D%22%2338bdf8%22%3E%26%23x092E%3B%26%23x093E%3B%26%23x0930%3B%26%23x0941%3B%26%23x0924%3B%20%26%23x0915%3B%26%23x0947%3B%26%23x0928%3B%26%23x094D%3B%26%23x0926%3B%26%23x094D%3B%26%23x0930%3B%3C%2Ftspan%3E%0A%20%20%20%20%3C%2Ftext%3E%0A%3C%2Fsvg%3E") no-repeat center center !important;
+    background: url("data:image/svg+xml;utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20width%3D%22380px%22%20height%3D%2275px%22%20viewBox%3D%220%200%20380%2075%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22marutGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2338bdf8%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%3Cfilter%20id%3D%22shadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%222%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23000000%22%20flood-opacity%3D%220.6%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Ffilter%3E%0A%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(10%2C%2010)%22%20filter%3D%22url(%23shadow)%22%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M18%2036%20C6%2036%200%2027%200%2018%20C0%208%209%200%2019%200%20C28%200%2036%206%2037%2015%20C41%2014%2045%2014%2048%2016%20C53%2019%2054%2025%2053%2029%20C51%2034%2046%2036%2042%2036%20Z%22%20fill%3D%22url(%23marutGrad)%22%20opacity%3D%220.95%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2045%20Q%2027%2042%2048%2045%20T%2066%2045%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%224.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M0%2054%20Q%2020%2051%2038%2054%20T%2056%2054%22%20stroke%3D%22%23bae6fd%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2282%22%20y%3D%2250%22%20font-family%3D%22'Gotu'%2C%20'Noto%20Sans%20Devanagari'%2C%20'Mangal'%2C%20'Nirmala%20UI'%2C%20sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22900%22%20fill%3D%22%23FFFFFF%22%20filter%3D%22url(%23shadow)%22%3E%0A%20%20%20%20%20%20%20%20%26%23x092D%3B%26%23x093E%3B%26%23x0930%3B%26%23x0924%3B%26%23x0940%3B%26%23x092F%3B%20%3Ctspan%20fill%3D%22%2338bdf8%22%3E%26%23x092E%3B%26%23x093E%3B%26%23x0930%3B%26%23x0941%3B%26%23x0924%3B%20%26%23x0915%3B%26%23x0947%3B%26%23x0928%3B%26%23x094D%3B%26%23x0926%3B%26%23x094D%3B%26%23x0930%3B%3C%2Ftspan%3E%0A%20%20%20%20%3C%2Ftext%3E%0A%3C%2Fsvg%3E") no-repeat center center !important;
     background-size: contain !important;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
 }
 
 #plugin-login .plugin__title {
     text-align: center !important;
+    font-family: "Gotu", sans-serif !important;
     font-size: 20px !important;
     color: #ffffff !important;
     margin-bottom: 22px !important;
@@ -88,6 +98,7 @@ li, td, th,
 
 #plugin-login .plugin__title::after {
     content: " \2022  \0909\092A\092F\094B\0917\0915\0930\094D\0924\093E  \092A\094B\0930\094D\091F\0932";
+    font-family: "Gotu", sans-serif !important;
     font-size: 13px;
     color: #38bdf8;
     font-weight: 600;
@@ -101,6 +112,7 @@ li, td, th,
 #plugin-login form button,
 #device-mobile #plugin-login .button,
 #device-mobile #plugin-login button {
+    font-family: "Gotu", sans-serif !important;
     background: linear-gradient(135deg, #0284c7, #0ea5e9) !important;
     background-color: #0284c7 !important;
     border: none !important;
@@ -121,6 +133,7 @@ li, td, th,
 }
 
 #plugin-login input {
+    font-family: "Gotu", sans-serif !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 6px !important;
     background-color: rgba(255, 255, 255, 0.08) !important;
