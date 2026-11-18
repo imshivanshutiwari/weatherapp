@@ -1,1 +1,1 @@
-export default{WATCHFACES_TITLE:"WeatherApp Watch Face",WATCHFACES_SUBTITLE:"Add a WeatherApp Watch Face to your Apple Watch and have forecast right on your wrist.",WATCHFACES_ADDBUTTON:"Add Apple Watch Face"};
+export default{WATCHFACES_TITLE:"भारतीय मारुत केन्द्र Watch Face",WATCHFACES_SUBTITLE:"Add a भारतीय मारुत केन्द्र Watch Face to your Apple Watch and have forecast right on your wrist.",WATCHFACES_ADDBUTTON:"Add Apple Watch Face"};

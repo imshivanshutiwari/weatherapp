@@ -1,1 +1,1 @@
-export default{STARTUP_OBSOLETE_APP:"Phiên bản ứng dụng WeatherApp này đã <b>lỗi thời</b> và sẽ sớm ngừng hoạt động. Vui lòng <b>cập nhật ứng dụng WeatherApp</b> của bạn lên phiên bản mới nhất."};
+export default{STARTUP_OBSOLETE_APP:"Phiên bản ứng dụng भारतीय मारुत केन्द्र này đã <b>lỗi thời</b> và sẽ sớm ngừng hoạt động. Vui lòng <b>cập nhật ứng dụng भारतीय मारुत केन्द्र</b> của bạn lên phiên bản mới nhất."};

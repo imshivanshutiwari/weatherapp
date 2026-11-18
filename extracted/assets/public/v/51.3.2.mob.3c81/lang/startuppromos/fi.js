@@ -1,1 +1,1 @@
-export default{STARTUP_OBSOLETE_APP:"Tämä WeatherApp-sovelluksen versio on <b>vanhentunut</b> ja lakkaa pian toimimasta. <b>Päivitä WeatherApp-sovelluksesi</b> uusimpaan versioon."};
+export default{STARTUP_OBSOLETE_APP:"Tämä भारतीय मारुत केन्द्र-sovelluksen versio on <b>vanhentunut</b> ja lakkaa pian toimimasta. <b>Päivitä भारतीय मारुत केन्द्र-sovelluksesi</b> uusimpaan versioon."};
