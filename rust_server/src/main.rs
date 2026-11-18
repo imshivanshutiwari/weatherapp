@@ -293,7 +293,14 @@ async fn handle_upstream_node(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> impl IntoResponse {
-    let query = req.uri().query().unwrap_or("");
+    let mut query = req.uri().query().unwrap_or("").to_string();
+    if path.contains("minifest") && !query.contains("premium=true") {
+        if query.is_empty() {
+            query = "premium=true".to_string();
+        } else {
+            query = format!("{}&premium=true", query);
+        }
+    }
     let url = if query.is_empty() {
         format!("https://node.windy.com/{}", path)
     } else {
@@ -365,7 +372,20 @@ async fn handle_node_metadata(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    handle_node_proxy(state, format!("/metadata/{}", path), req).await
+    let mut query = req.uri().query().unwrap_or("").to_string();
+    if path.contains("minifest") && !query.contains("premium=true") {
+        if query.is_empty() {
+            query = "premium=true".to_string();
+        } else {
+            query = format!("{}&premium=true", query);
+        }
+    }
+    let url = if query.is_empty() {
+        format!("https://node.windy.com/metadata/{}", path)
+    } else {
+        format!("https://node.windy.com/metadata/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, false, "").await
 }
 
 async fn handle_node_maptile(
