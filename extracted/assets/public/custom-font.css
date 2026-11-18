@@ -94,14 +94,13 @@ li, td, th,
     margin-left: 6px;
 }
 
-#plugin-login .button.size-xl,
+#plugin-login button,
 #plugin-login .button,
-#plugin-login .size-xl,
 #plugin-login button[type="submit"],
 #plugin-login .btn--submit,
 #plugin-login form button,
 #device-mobile #plugin-login .button,
-#device-mobile #plugin-login .size-xl {
+#device-mobile #plugin-login button {
     background: linear-gradient(135deg, #0284c7, #0ea5e9) !important;
     background-color: #0284c7 !important;
     border: none !important;
