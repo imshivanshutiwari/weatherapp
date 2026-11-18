@@ -38,3 +38,15 @@ li, td, th,
 [class*="icon-"] {
     font-family: iconfont !important;
 }
+
+/* === BMK Logo Fixes === */
+/* Hide the WeatherApp sun/cloud sprite icon */
+.animated-windy-logo .w-sprite {
+    display: none !important;
+}
+
+/* Expand text image width so full Hindi text 'भारतीय मारुत केन्द्र' shows */
+.animated-windy-logo .text {
+    width: 320px !important;
+    left: 0 !important;
+}
