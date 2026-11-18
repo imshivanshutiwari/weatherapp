@@ -1,36 +1,21 @@
-<svg width="340px" height="70px" viewBox="0 0 340 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="380px" height="75px" viewBox="0 0 380 75" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <filter id="logoShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <linearGradient id="marutGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#0284c7" />
+        </linearGradient>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
             <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
         </filter>
-        <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8"/>
-            <stop offset="100%" stop-color="#0284c7"/>
-        </linearGradient>
-        <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#fbbf24"/>
-            <stop offset="100%" stop-color="#f59e0b"/>
-        </linearGradient>
     </defs>
-    
-    <!-- Modern WeatherApp Icon -->
-    <g filter="url(#logoShadow)" transform="translate(10, 8)">
-        <!-- Sun -->
-        <circle cx="28" cy="22" r="14" fill="url(#sunGrad)"/>
-        <!-- Sun rays -->
-        <path d="M 28 4 L 28 0 M 28 40 L 28 44 M 10 22 L 6 22 M 46 22 L 50 22 M 15 9 L 12 6 M 41 35 L 44 38 M 15 35 L 12 38 M 41 9 L 44 6" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-        <!-- Cloud with wind curve -->
-        <path d="M 18 38 A 12 12 0 0 1 36 28 A 16 16 0 0 1 54 36 A 10 10 0 0 1 52 46 L 18 46 A 8 8 0 0 1 18 38 Z" fill="url(#cloudGrad)"/>
-        <!-- Wind speed trail -->
-        <path d="M 6 42 Q 14 42 22 42 M 10 46 Q 20 46 32 46" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+    <!-- Weather & Wind Vortex Icon -->
+    <g transform="translate(10, 10)" filter="url(#shadow)">
+        <path d="M18 36 C6 36 0 27 0 18 C0 8 9 0 19 0 C28 0 36 6 37 15 C41 14 45 14 48 16 C53 19 54 25 53 29 C51 34 46 36 42 36 Z" fill="url(#marutGrad)" opacity="0.95"/>
+        <path d="M6 45 Q 27 42 48 45 T 66 45" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path d="M0 54 Q 20 51 38 54 T 56 54" stroke="#bae6fd" stroke-width="4" stroke-linecap="round" fill="none"/>
     </g>
-
-    <!-- Clean Modern Typography -->
-    <text x="75" y="44" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff" letter-spacing="-0.5px">
-        Weather<tspan fill="#38bdf8">App</tspan>
+    <!-- Big Bold Hindi Typography -->
+    <text x="82" y="50" font-family="'Noto Sans Devanagari', 'Mangal', 'Nirmala UI', 'Kohinoor Devanagari', 'Segoe UI', sans-serif" font-size="34" font-weight="900" letter-spacing="0.5" fill="#FFFFFF" filter="url(#shadow)">
+        भारतीय <tspan fill="#38bdf8">मारुत केन्द्र</tspan>
     </text>
-    <text x="235" y="43" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.5px">
-        LIVE
-    </text>
-    <circle cx="270" cy="39" r="4" fill="#10b981"/>
 </svg>
