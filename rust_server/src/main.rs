@@ -117,7 +117,9 @@ async fn main() {
         .fallback_service(serve_dir)
         .layer(middleware::from_fn(add_no_cache_headers))
         .layer(cors)
-        .with_state(state);
+        .with_state(state.clone());
+
+    spawn_india_prewarmer(state.clone());
 
     let addr_v4 = SocketAddr::from(([0, 0, 0, 0], PORT));
     let addr_v6 = SocketAddr::from(([0, 0, 0, 0, 0, 0, 0, 1], PORT));
@@ -139,6 +141,53 @@ async fn main() {
     axum::serve(listener_v4, app)
         .await
         .expect("Server failed");
+}
+
+fn spawn_india_prewarmer(state: Arc<AppState>) {
+    tokio::spawn(async move {
+        tokio::time::sleep(Duration::from_secs(2)).await;
+        println!("[BMK-Rust] 🚀 Initiating Indian Subcontinent smart pre-warmer...");
+        let mut prewarmed = 0;
+
+        // 1. Pre-warm Core Metadata & Location
+        let core_urls = [
+            ("https://node.windy.com/services/umisteni", "/services/umisteni"),
+            ("https://node.windy.com/metadata/v1.0/forecast/ecmwf-hres/minifest.json?premium=true", "/metadata/v1.0/forecast/ecmwf-hres/minifest.json?premium=true"),
+        ];
+        for (url, key) in core_urls {
+            let res = proxy_request(&state, url, true, key).await;
+            if res.status().is_success() {
+                prewarmed += 1;
+            }
+        }
+
+        // 2. Extract model refTime and pre-warm Indian Subcontinent citytiles
+        if let Some((_, _, bytes)) = state.tile_cache.get("/metadata/v1.0/forecast/ecmwf-hres/minifest.json?premium=true").await {
+            if let Ok(text) = std::str::from_utf8(&bytes) {
+                if let Some(pos) = text.find(r#""ref":""#) {
+                    let rest = &text[pos + 7..];
+                    if let Some(end) = rest.find('"') {
+                        let ref_time = &rest[..end];
+                        let india_tiles = [
+                            (3, 5, 3), (3, 5, 4), (3, 6, 3), (3, 6, 4),
+                            (4, 11, 7), (4, 12, 7), (4, 11, 8), (4, 12, 8),
+                            (5, 23, 14), (5, 23, 15), (5, 24, 14), (5, 24, 15)
+                        ];
+                        for (z, x, y) in india_tiles {
+                            let query = format!("refTime={}&labelsVersion=1", ref_time);
+                            let path = format!("/citytile/v1.0/ecmwf-hres/{}/{}/{}?{}", z, x, y, query);
+                            let url = format!("https://node.windy.com{}", path);
+                            let res = proxy_request(&state, &url, true, &path).await;
+                            if res.status().is_success() {
+                                prewarmed += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        println!("[BMK-Rust] ⚡ Successfully pre-warmed {} Indian Subcontinent datasets & tiles in RAM & Disk Cache!", prewarmed);
+    });
 }
 
 async fn add_no_cache_headers(req: Request<Body>, next: Next) -> Response<Body> {
@@ -411,7 +460,14 @@ async fn handle_node_maptile(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    handle_node_proxy(state, format!("/maptile/{}", path), req).await
+    let cache_key = req.uri().to_string();
+    let query = req.uri().query().unwrap_or("");
+    let url = if query.is_empty() {
+        format!("https://node.windy.com/maptile/{}", path)
+    } else {
+        format!("https://node.windy.com/maptile/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, true, &cache_key).await
 }
 
 async fn handle_node_forecast(
@@ -419,7 +475,14 @@ async fn handle_node_forecast(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    handle_node_proxy(state, format!("/forecast/{}", path), req).await
+    let cache_key = req.uri().to_string();
+    let query = req.uri().query().unwrap_or("");
+    let url = if query.is_empty() {
+        format!("https://node.windy.com/forecast/{}", path)
+    } else {
+        format!("https://node.windy.com/forecast/{}?{}", path, query)
+    };
+    proxy_request(&state, &url, true, &cache_key).await
 }
 
 async fn handle_node_search(
@@ -559,17 +622,57 @@ async fn handle_users_data(
 
 async fn handle_api(
     Path(path): Path<String>,
+    req: Request<Body>,
 ) -> Response<Body> {
     if path == "info" || path == "v1/info" {
         return Response::builder()
             .status(StatusCode::OK)
             .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
             .body(Body::from(r#"{"auth":true,"userInfo":{"auth":true,"username":"Bhartiya Marut Kendra User","tier":"premium","joindate":1700000000,"logindate":1700000000},"subscriptionInfo":{"status":"active","tier":"premium","state":"active","platform":"web","expires":4102444800000}}"#))
             .unwrap();
+    }
+    if path == "bmk/status" {
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header(header::CONTENT_TYPE, "application/json")
+            .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(r#"{"status":"ok","engine":"Bhartiya Marut Kendra High-Performance Rust Engine","version":"2.4.0","wasm_simd":true,"subcontinent_prewarm":true}"#))
+            .unwrap();
+    }
+    if path == "bmk/favorites" {
+        let fav_path = PathBuf::from(r"C:\Users\shiva\Windy_App\favorites.json");
+        if req.method() == Method::POST {
+            let body_bytes = axum::body::to_bytes(req.into_body(), 1024 * 1024).await.unwrap_or_default();
+            let _ = tokio::fs::write(&fav_path, &body_bytes).await;
+            return Response::builder()
+                .status(StatusCode::OK)
+                .header(header::CONTENT_TYPE, "application/json")
+                .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                .body(Body::from(r#"{"status":"ok","saved":true}"#))
+                .unwrap();
+        } else {
+            if let Ok(data) = tokio::fs::read_to_string(&fav_path).await {
+                return Response::builder()
+                    .status(StatusCode::OK)
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                    .body(Body::from(data))
+                    .unwrap();
+            } else {
+                return Response::builder()
+                    .status(StatusCode::OK)
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                    .body(Body::from(r#"{"status":"ok","favorites":[]}"#))
+                    .unwrap();
+            }
+        }
     }
     Response::builder()
         .status(StatusCode::OK)
         .header(header::CONTENT_TYPE, "application/json")
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
         .body(Body::from(r#"{"status":"ok"}"#))
         .unwrap()
 }
