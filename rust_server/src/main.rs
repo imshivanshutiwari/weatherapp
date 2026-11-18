@@ -2,6 +2,7 @@ use axum::{
     body::Body,
     extract::{Path, State},
     http::{header, Method, Request, Response, StatusCode},
+    middleware::{self, Next},
     response::IntoResponse,
     routing::get,
     Router,
@@ -114,6 +115,7 @@ async fn main() {
         .route("/api/*path", get(handle_api).post(handle_api))
         // Static assets fallback
         .fallback_service(serve_dir)
+        .layer(middleware::from_fn(add_no_cache_headers))
         .layer(cors)
         .with_state(state);
 
@@ -137,6 +139,22 @@ async fn main() {
     axum::serve(listener_v4, app)
         .await
         .expect("Server failed");
+}
+
+async fn add_no_cache_headers(req: Request<Body>, next: Next) -> Response<Body> {
+    let mut resp = next.run(req).await;
+    // Don't disable tile caching, only static assets, js, css, html
+    if !resp.headers().contains_key("X-Cache") {
+        resp.headers_mut().insert(
+            header::CACHE_CONTROL,
+            header::HeaderValue::from_static("no-cache, no-store, must-revalidate"),
+        );
+        resp.headers_mut().insert(
+            header::PRAGMA,
+            header::HeaderValue::from_static("no-cache"),
+        );
+    }
+    resp
 }
 
 fn get_cache_paths(disk_dir: &StdPath, key: &str) -> (PathBuf, PathBuf) {
