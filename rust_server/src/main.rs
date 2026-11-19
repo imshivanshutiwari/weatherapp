@@ -24,21 +24,47 @@ use tower_http::{
 use tracing::error;
 
 const PORT: u16 = 8080;
-const PUBLIC_DIR: &str = r"C:\Users\shiva\Windy_App\extracted\assets\public";
-const TILE_CACHE_DIR: &str = r"C:\Users\shiva\Windy_App\tile_cache";
+
+fn get_project_root() -> PathBuf {
+    // 1. Check current working directory
+    let cwd = std::env::current_dir().unwrap_or_default();
+    if cwd.join("extracted").exists() {
+        return cwd;
+    }
+    // 2. Check executable directory and its parent
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(parent) = exe.parent() {
+            if parent.join("extracted").exists() {
+                return parent.to_path_buf();
+            }
+            if let Some(grandparent) = parent.parent() {
+                if grandparent.join("extracted").exists() {
+                    return grandparent.to_path_buf();
+                }
+            }
+        }
+    }
+    // 3. Fallback to default relative path
+    PathBuf::from(".")
+}
 
 #[derive(Clone)]
 struct AppState {
     client: Client,
     tile_cache: Cache<String, (StatusCode, String, Bytes)>,
     disk_cache_dir: PathBuf,
+    public_dir: PathBuf,
+    project_root: PathBuf,
 }
 
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
 
-    let disk_cache_dir = PathBuf::from(TILE_CACHE_DIR);
+    let project_root = get_project_root();
+    let public_dir = project_root.join("extracted").join("assets").join("public");
+    let disk_cache_dir = project_root.join("tile_cache");
+
     if let Err(e) = tokio::fs::create_dir_all(&disk_cache_dir).await {
         error!("Failed to create tile cache dir: {}", e);
     }
@@ -61,7 +87,9 @@ async fn main() {
     let state = Arc::new(AppState {
         client,
         tile_cache,
-        disk_cache_dir,
+        disk_cache_dir: disk_cache_dir.clone(),
+        public_dir: public_dir.clone(),
+        project_root: project_root.clone(),
     });
 
     let cors = CorsLayer::new()
@@ -75,7 +103,7 @@ async fn main() {
         ])
         .allow_headers(Any);
 
-    let serve_dir = ServeDir::new(PathBuf::from(PUBLIC_DIR))
+    let serve_dir = ServeDir::new(&public_dir)
         .append_index_html_on_directories(true);
 
     let app = Router::new()
@@ -113,11 +141,11 @@ async fn main() {
         )
         .route("/plugins/list", get(handle_plugins_list))
         .route("/api/*path", get(handle_api).post(handle_api))
+        .with_state(state.clone())
         // Static assets fallback
         .fallback_service(serve_dir)
         .layer(middleware::from_fn(add_no_cache_headers))
-        .layer(cors)
-        .with_state(state.clone());
+        .layer(cors);
 
     spawn_india_prewarmer(state.clone());
 
@@ -125,7 +153,8 @@ async fn main() {
     let addr_v6 = SocketAddr::from(([0, 0, 0, 0, 0, 0, 0, 1], PORT));
 
     println!("Bhartiya Marut Kendra Ultra-Fast Rust Server listening on port {} (IPv4 + IPv6 dual-stack)", PORT);
-    println!("Persistent Two-Tier Tile Cache: Tier 1 (RAM Moka) + Tier 2 (Disk: {})", TILE_CACHE_DIR);
+    println!("Serving assets from: {:?}", public_dir);
+    println!("Persistent Two-Tier Tile Cache: Tier 1 (RAM Moka) + Tier 2 (Disk: {:?})", disk_cache_dir);
 
     let listener_v4 = tokio::net::TcpListener::bind(addr_v4)
         .await
@@ -590,8 +619,10 @@ async fn handle_node_users(
     handle_node_proxy(state, format!("/users/{}", path), req).await
 }
 
-async fn handle_plugins_list() -> Response<Body> {
-    let path = PathBuf::from(PUBLIC_DIR).join("plugins_list.json");
+async fn handle_plugins_list(
+    State(state): State<Arc<AppState>>,
+) -> Response<Body> {
+    let path = state.public_dir.join("plugins_list.json");
     if let Ok(bytes) = tokio::fs::read(&path).await {
         return Response::builder()
             .status(StatusCode::OK)
@@ -621,6 +652,7 @@ async fn handle_users_data(
 }
 
 async fn handle_api(
+    State(state): State<Arc<AppState>>,
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
@@ -641,7 +673,7 @@ async fn handle_api(
             .unwrap();
     }
     if path == "bmk/favorites" {
-        let fav_path = PathBuf::from(r"C:\Users\shiva\Windy_App\favorites.json");
+        let fav_path = state.project_root.join("favorites.json");
         if req.method() == Method::POST {
             let body_bytes = axum::body::to_bytes(req.into_body(), 1024 * 1024).await.unwrap_or_default();
             let _ = tokio::fs::write(&fav_path, &body_bytes).await;
