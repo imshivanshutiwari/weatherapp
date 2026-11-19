@@ -489,14 +489,7 @@ async fn handle_node_maptile(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    let cache_key = req.uri().to_string();
-    let query = req.uri().query().unwrap_or("");
-    let url = if query.is_empty() {
-        format!("https://node.windy.com/maptile/{}", path)
-    } else {
-        format!("https://node.windy.com/maptile/{}?{}", path, query)
-    };
-    proxy_request(&state, &url, true, &cache_key).await
+    handle_node_proxy(state, format!("/maptile/{}", path), req).await
 }
 
 async fn handle_node_forecast(
@@ -504,14 +497,7 @@ async fn handle_node_forecast(
     Path(path): Path<String>,
     req: Request<Body>,
 ) -> Response<Body> {
-    let cache_key = req.uri().to_string();
-    let query = req.uri().query().unwrap_or("");
-    let url = if query.is_empty() {
-        format!("https://node.windy.com/forecast/{}", path)
-    } else {
-        format!("https://node.windy.com/forecast/{}?{}", path, query)
-    };
-    proxy_request(&state, &url, true, &cache_key).await
+    handle_node_proxy(state, format!("/forecast/{}", path), req).await
 }
 
 async fn handle_node_search(
