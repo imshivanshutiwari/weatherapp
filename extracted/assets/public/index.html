@@ -95,4 +95,72 @@ fetch('v/51.3.2.mob.3c81/bmk_wasm.wasm')
     display: none !important;
     background-image: none !important;
 }
-</style></head><body><section id="map-container" style="position: absolute; bottom: 0; left: 0; right: 0; top: 0; width: 100%; height: 100%;"><div id="leaflet-map" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%"></div><div id="picker-dot"><svg viewBox="0 0 100 100"><path d="M 25,50 L 0,50 M 75,50 L 100,50" stroke-width="8"/><path d="M 50,25 L 50,0 M 50,75 L 50,100" stroke-width="8"/><circle cx="50" cy="50" r="4"/></svg></div><span data-plugin="map-container"></span></section><a id="contrib" class="mobilehide" href="http://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a><section id="bottom-wrapper"><span data-plugin="mobile-ui" class="nomouse"></span><span data-plugin="bottom-controls-mobile"></span><span data-plugin="bottom-below-controls-mobile"></span><div class="metric-legend" data-ref="legendMobile" id="legend-mobile"></div></section><span data-plugin="bottom-controls-desktop" class="hide-on-picker-drag right-border"></span><a id="go-premium-mobile" data-ref="premiumButtonMobile" class="premium-button size-s top-border desktophide" data-t="SUB_GO"></a> <span data-plugin="embed-ui"></span><div class="rhpane hide-on-picker-drag top-border right-border mobiletablethide"><span data-plugin="rhpane-top"></span><div class="rhpane__bottom-messages" data-ref="bottomMessages"></div><span data-plugin="above-rhbottom"></span><span data-plugin="rhbottom"></span><span data-plugin="below-rhbottom"></span><span data-plugin="bottom-pane"></span></div><span data-plugin="plugins"></span><span data-plugin="bottom-right"></span><div id="search" data-ref="search-click-outside-container" class="hide-on-picker-drag top-border"><div id="search-dimming-background"><span data-plugin="search-input"></span><span data-plugin="startup-weather"></span></div><div data-plugin="startup-element"></div><div data-plugin="startup-pin2hp"></div><div data-ignore="hp" data-plugin="startup-debug"></div><span data-plugin="search"></span></div></body></html>
+</style>
+<script>
+/**
+ * भारतीय मारुत केन्द्र - Smart Auto-Sync & Live Forecast Keeper
+ * Automatically keeps forecast models, timeline slider, and weather layers in sync
+ * when tab stays open across hours or wakes up from background sleep.
+ */
+(function() {
+    let lastActiveTime = Date.now();
+    const IDLE_THRESHOLD_MS = 25 * 60 * 1000; // 25 minutes idle
+    const HEARTBEAT_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes live check
+
+    function syncForecastToNow(reason) {
+        try {
+            if (window.W && window.W.store) {
+                const now = Date.now();
+                const currentTs = window.W.store.get('timestamp');
+                // If timestamp drifted away by more than 2 hours or waking from deep sleep
+                if (Math.abs(now - currentTs) > 2 * 3600 * 1000) {
+                    console.log('[BMK-AutoSync] Aligning timeline to current live time (' + reason + ')');
+                    window.W.store.set('timestamp', now);
+                    if (window.W.broadcast) {
+                        window.W.broadcast.emit('timestampChanged', now);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('[BMK-AutoSync] Soft sync failed, fallback active:', e);
+        }
+    }
+
+    // 1. Wakeup from Background Sleep / Tab Visibility Change
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            const idleTime = Date.now() - lastActiveTime;
+            lastActiveTime = Date.now();
+
+            // If user returns after long idle (e.g. overnight or several hours)
+            if (idleTime > 60 * 60 * 1000) {
+                console.log('[BMK-AutoSync] Tab resumed after deep idle (' + Math.round(idleTime / 60000) + ' mins). Performing smooth live sync...');
+                // Smooth soft reload to fetch fresh minifest and latest weather model run
+                window.location.reload();
+            } else if (idleTime > IDLE_THRESHOLD_MS) {
+                syncForecastToNow('visibilitychange-idle');
+            }
+        } else {
+            lastActiveTime = Date.now();
+        }
+    });
+
+    // 2. Window Focus event (User clicks back into window)
+    window.addEventListener('focus', function() {
+        const idleTime = Date.now() - lastActiveTime;
+        if (idleTime > IDLE_THRESHOLD_MS) {
+            syncForecastToNow('window-focus');
+        }
+        lastActiveTime = Date.now();
+    });
+
+    // 3. Periodic Background Heartbeat (every 15 mins)
+    setInterval(function() {
+        if (!document.hidden) {
+            syncForecastToNow('periodic-heartbeat');
+        }
+    }, HEARTBEAT_INTERVAL_MS);
+
+    console.log('[BMK] Smart Auto-Sync & Live Keeper initialized');
+})();
+</script></head><body><section id="map-container" style="position: absolute; bottom: 0; left: 0; right: 0; top: 0; width: 100%; height: 100%;"><div id="leaflet-map" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%"></div><div id="picker-dot"><svg viewBox="0 0 100 100"><path d="M 25,50 L 0,50 M 75,50 L 100,50" stroke-width="8"/><path d="M 50,25 L 50,0 M 50,75 L 50,100" stroke-width="8"/><circle cx="50" cy="50" r="4"/></svg></div><span data-plugin="map-container"></span></section><a id="contrib" class="mobilehide" href="http://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a><section id="bottom-wrapper"><span data-plugin="mobile-ui" class="nomouse"></span><span data-plugin="bottom-controls-mobile"></span><span data-plugin="bottom-below-controls-mobile"></span><div class="metric-legend" data-ref="legendMobile" id="legend-mobile"></div></section><span data-plugin="bottom-controls-desktop" class="hide-on-picker-drag right-border"></span><a id="go-premium-mobile" data-ref="premiumButtonMobile" class="premium-button size-s top-border desktophide" data-t="SUB_GO"></a> <span data-plugin="embed-ui"></span><div class="rhpane hide-on-picker-drag top-border right-border mobiletablethide"><span data-plugin="rhpane-top"></span><div class="rhpane__bottom-messages" data-ref="bottomMessages"></div><span data-plugin="above-rhbottom"></span><span data-plugin="rhbottom"></span><span data-plugin="below-rhbottom"></span><span data-plugin="bottom-pane"></span></div><span data-plugin="plugins"></span><span data-plugin="bottom-right"></span><div id="search" data-ref="search-click-outside-container" class="hide-on-picker-drag top-border"><div id="search-dimming-background"><span data-plugin="search-input"></span><span data-plugin="startup-weather"></span></div><div data-plugin="startup-element"></div><div data-plugin="startup-pin2hp"></div><div data-ignore="hp" data-plugin="startup-debug"></div><span data-plugin="search"></span></div></body></html>
