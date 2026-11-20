@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1.40", features = ["full"] }
 axum = { version = "0.7" }
-tower-http = { version = "0.5", features = ["fs", "cors", "set-header"] }
+tower-http = { version = "0.5", features = ["fs", "cors", "set-header", "compression-gzip", "compression-br"] }
 reqwest = { version = "0.12", features = ["stream"] }
 bytes = "1.7"
 moka = { version = "0.12", features = ["future"] }

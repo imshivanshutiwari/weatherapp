@@ -18,6 +18,7 @@ use std::{
     time::Duration,
 };
 use tower_http::{
+    compression::CompressionLayer,
     cors::{Any, CorsLayer},
     services::ServeDir,
 };
@@ -139,6 +140,7 @@ async fn main() {
         .route("/api/*path", get(handle_api).post(handle_api))
         // Static assets fallback
         .fallback_service(serve_dir)
+        .layer(CompressionLayer::new())
         .layer(middleware::from_fn(add_no_cache_headers))
         .layer(cors)
         .with_state(state);
